@@ -1,13 +1,18 @@
 {
-  "name": "blade-wallet-package",
+  "name": "bladeconnect",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc"
+    "build": "tsc",
+    "prepare": "npm run build"
   },
   "author": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Blade-Labs/bladeconnect.git"
+  },
   "license": "ISC",
   "devDependencies": {
     "typescript": "^4.6.3"
