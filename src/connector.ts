@@ -7,7 +7,10 @@ import { WalletLoadedEvent, BladeExtensionInterface } from './models/blade';
  */
 export function waitExtensionInterface(): Promise<BladeExtensionInterface> {
 
+    console.log(`creating extension promise`);
     return new Promise((resolve, reject) => {
+
+        console.log(`window : ${window} docu: ${document}`);
 
         if (window.bladeConnect != null) {
             console.log(`window.bladeConnect found`);

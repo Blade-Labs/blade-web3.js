@@ -15,9 +15,9 @@ export type MessageSigner = (message: Uint8Array) => Promise<Uint8Array>;
  */
 export class BladeWallet extends Wallet {
 
-    static withPrivateKey(privateKey: PrivateKey): BladeWallet {
+    /*static withPrivateKey(privateKey: PrivateKey): BladeWallet {
         return new BladeWallet();
-    }
+    }*/
 
     private _bladeInterface: BladeExtensionInterface | null = null;
 
