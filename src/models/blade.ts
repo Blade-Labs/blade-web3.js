@@ -2,7 +2,7 @@ import { Wallet } from "@hashgraph/sdk"
 
 declare global {
     interface Window {
-        walletConnect?: BladeExtensionInterface
+        bladeConnect?: BladeExtensionInterface
     }
 }
 

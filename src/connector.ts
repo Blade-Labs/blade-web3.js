@@ -9,15 +9,15 @@ export function waitExtensionInterface(): Promise<BladeExtensionInterface> {
 
     return new Promise((resolve, reject) => {
 
-        if (window.walletConnect != null) {
-            resolve(window.walletConnect as BladeExtensionInterface);
+        if (window.bladeConnect != null) {
+            resolve(window.bladeConnect as BladeExtensionInterface);
         } else {
 
             const walletLoaded = () => {
 
                 document.removeEventListener(WalletLoadedEvent, walletLoaded);
-                if (window.walletConnect != null) {
-                    resolve(window.walletConnect as BladeExtensionInterface);
+                if (window.bladeConnect != null) {
+                    resolve(window.bladeConnect as BladeExtensionInterface);
                 } else {
                     reject(new Error('Blade Wallet Connector not found.'));
                 }
