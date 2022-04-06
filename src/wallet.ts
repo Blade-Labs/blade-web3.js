@@ -1,10 +1,9 @@
 import type { AccountId, AccountBalance, AccountInfo, LedgerId, Transaction, Key, Provider, Executable, SignerSignature, TransactionRecord, PrivateKey } from '@hashgraph/sdk';
 
-import { Wallet } from '@hashgraph/sdk';
-
 import { BladeExtensionInterface } from './models/blade';
 import { waitExtensionInterface } from './connector';
 import { noExtensionError, noSessionError } from './errors';
+import { Wallet } from '@hashgraph/sdk';
 
 export type MessageSigner = (message: Uint8Array) => Promise<Uint8Array>;
 
@@ -22,21 +21,19 @@ export class BladeWallet extends Wallet {
 
     private _bladeInterface: BladeExtensionInterface | null = null;
 
-    /**
-     * Wallet cannot send calls to the Extension until the extension's code has been injected
-     * into Content script.
-     * In future the Extension should accept messages passively.
-     */
-    waitBridge: Promise<BladeExtensionInterface>;
-
     constructor() {
 
         super();
 
-        console.log(`BladeWallet() constructor.`);
-
-        this.waitBridge = waitExtensionInterface();
-        this.waitBridge.then((v) => this._onExtensionLoaded(v));
+        /**
+         * Wallet cannot send calls to the Extension until the extension's code has been injected
+         * into Content script.
+         * In future the Extension should accept messages passively.
+         */
+        waitExtensionInterface().then((v) => this._onExtensionLoaded(v)).catch((_) => {
+            console.log(`NO EXTENSION LOADED`);
+            throw noExtensionError();
+        });
 
     }
 
