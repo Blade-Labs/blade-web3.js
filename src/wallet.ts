@@ -33,6 +33,8 @@ export class BladeWallet extends Wallet {
 
         super();
 
+        console.log(`BladeWallet() constructor.`);
+
         this.waitBridge = waitExtensionInterface();
         this.waitBridge.then((v) => this._onExtensionLoaded(v));
 
@@ -40,12 +42,13 @@ export class BladeWallet extends Wallet {
 
     private async _onExtensionLoaded(extension: BladeExtensionInterface) {
 
+        console.log(`BladeWallet.onExtensionLoaded()`);
         this._bladeInterface = extension;
         this._loginBlade(extension);
 
     }
     private async _loginBlade(extension: BladeExtensionInterface): Promise<void> {
-
+        console.log(`BladeWallet._loginBlade()`);
         await extension.createSession();
 
     }
