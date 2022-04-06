@@ -9,6 +9,7 @@ export enum ErrorCodes {
 
 export enum BladeWalletError {
     ExtensionNotFound = 'ExtensionNotFound',
+    WalletNotReady = 'WalletNotReady',
     NoSession = 'NoActiveSession'
 }
 
@@ -19,7 +20,7 @@ export function noExtensionError(): Error {
 }
 
 export function noSessionError(): Error {
-    const err = new Error(`Blade login failed. User has failed to authenticate with extension.`);
+    const err = new Error(`Blade login failed. User failed to authenticate with extension.`);
     err.name = BladeWalletError.NoSession;
     return err;
 }

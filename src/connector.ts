@@ -1,4 +1,5 @@
 import { WalletLoadedEvent, BladeExtensionInterface } from './models/blade';
+import { noExtensionError } from './errors';
 
 /**
  * Wait for blade extension to be available.
@@ -10,15 +11,15 @@ export function waitExtensionInterface(): Promise<BladeExtensionInterface> {
 
 
         if (window.bladeConnect != null) {
-            resolve(window.bladeConnect as BladeExtensionInterface);
+            resolve(window.bladeConnect);
         } else {
 
             document.addEventListener(WalletLoadedEvent, () => {
 
                 if (window.bladeConnect != null) {
-                    resolve(window.bladeConnect as BladeExtensionInterface);
+                    resolve(window.bladeConnect);
                 } else {
-                    reject(new Error('Blade Wallet Connector not found.'));
+                    reject(noExtensionError());
                 }
             });
         }
