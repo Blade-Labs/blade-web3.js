@@ -21,6 +21,8 @@ export class BladeWallet extends Wallet {
 
     private _bladeInterface: BladeExtensionInterface | null = null;
 
+    private _bladeNotFound: boolean = false;
+
     constructor() {
 
         super();
@@ -30,22 +32,25 @@ export class BladeWallet extends Wallet {
          * into Content script.
          * In future the Extension should accept messages passively.
          */
-        waitExtensionInterface().then((v) => this._onExtensionLoaded(v)).catch((_) => {
-            console.log(`NO EXTENSION LOADED`);
-            throw noExtensionError();
+        waitExtensionInterface().then((v) => {
+            this._onExtensionLoaded(v);
+        }
+
+        ).catch((_) => {
+            this._bladeNotFound = true;
+            console.warn(`Blade Extension not found.`);
         });
 
     }
 
     private async _onExtensionLoaded(extension: BladeExtensionInterface) {
 
-        console.log(`BladeWallet.onExtensionLoaded()`);
         this._bladeInterface = extension;
         this._loginBlade(extension);
 
     }
     private async _loginBlade(extension: BladeExtensionInterface): Promise<void> {
-        console.log(`BladeWallet._loginBlade()`);
+
         await extension.createSession();
 
     }
