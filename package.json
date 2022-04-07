@@ -1,12 +1,14 @@
 {
   "name": "bladeconnect",
-  "version": "1.0.0",
+  "version": "0.9.0",
   "description": "",
-  "main": "dist/index.js",
+  "main": "lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "prepare": "tsc"
+    "prepare": "tsc",
+    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
+    "lint": "tslint -p tsconfig.json"
   },
   "author": "",
   "repository": {
@@ -15,7 +17,10 @@
   },
   "license": "ISC",
   "devDependencies": {
-    "typescript": "^4.6.3",
-    "@hashgraph/sdk": "2.11.3"
+    "@hashgraph/sdk": "2.11.3",
+    "prettier": "^2.6.2",
+    "tslint": "^6.1.3",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^4.6.3"
   }
 }

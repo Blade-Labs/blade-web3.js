@@ -28,7 +28,7 @@ export class BladeWallet extends Wallet {
 
     }
 
-    async connect(): Promise<void> {
+    async createSession(): Promise<void> {
 
         this._bladeInterface = await waitExtensionInterface();
         await this._bladeInterface.createSession();

@@ -1,12 +1,3 @@
-export enum ErrorCodes {
-    NO_SIGNATURE = 402,
-    FORBIDDEN = 403,
-    TIMED_OUT = 408,
-    LOCKED = 423,
-    UPGRADE_REQUIRED = 426,
-    TOO_MANY_REQUESTS = 429
-}
-
 export enum BladeWalletError {
     ExtensionNotFound = 'ExtensionNotFound',
     WalletNotReady = 'WalletNotReady',
@@ -20,7 +11,7 @@ export function noExtensionError(): Error {
 }
 
 export function noSessionError(): Error {
-    const err = new Error(`Blade login failed. User failed to authenticate with extension.`);
+    const err = new Error(`User does not have an active Blade Wallet session.`);
     err.name = BladeWalletError.NoSession;
     return err;
 }

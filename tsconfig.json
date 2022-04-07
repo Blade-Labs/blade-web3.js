@@ -4,8 +4,9 @@
     "module": "esnext",
     "strict": true,
     "declaration": true,
-    "outDir": "dist",
+    "outDir": "lib",
     "importHelpers": true,
+    "incremental": true,
     "moduleResolution": "node",
     "skipLibCheck": true,
     "baseUrl": ".",
@@ -24,7 +25,6 @@
   ],
   "include": [
     "src/**/*.ts",
-    "src/**/*.tsx",
     "index.ts"
   ],
   "exclude": [

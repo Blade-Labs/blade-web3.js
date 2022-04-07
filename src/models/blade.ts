@@ -13,15 +13,6 @@ export enum HederaNetwork {
     Testnet = "Testnet"
 }
 
-
-export type ConnectorAccount = {
-    id: string;
-    publicKey: string;
-    network: string;
-    metadata: any;
-    isHardware: boolean;
-}
-
 /**
  * The interface exposed by the Extension for wallet interactions.
  */
