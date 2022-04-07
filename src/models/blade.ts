@@ -24,7 +24,7 @@ export type BladeExtensionInterface = {
     get hasSession(): boolean;
     getActiveWallet(): Wallet | null;
 
-    addAccount(network: HederaNetwork, id: string, privateKey: string, metadata: string | null): Promise<Wallet>;
+    addAccount(network: HederaNetwork | null, id: string, privateKey: string, metadata: string | null): Promise<Wallet>;
 
 }
 

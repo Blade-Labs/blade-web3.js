@@ -7,6 +7,12 @@ import { Wallet } from '@hashgraph/sdk';
 
 export type MessageSigner = (message: Uint8Array) => Promise<Uint8Array>;
 
+function createInitialAccount(privateKey: PrivateKey) {
+
+
+
+}
+
 /**
  * Publicly exposed wallet interface.
  * 
@@ -15,14 +21,9 @@ export type MessageSigner = (message: Uint8Array) => Promise<Uint8Array>;
  */
 export class BladeWallet extends Wallet {
 
-    static withPrivateKey(privateKey: PrivateKey): BladeWallet {
-
-        return new BladeWallet(privateKey);
-    }
-
     private _bladeInterface: BladeExtensionInterface | null = null;
 
-    constructor(key?: PrivateKey) {
+    constructor(privateKey?: PrivateKey) {
 
         super();
 
