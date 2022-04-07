@@ -1,4 +1,16 @@
-import type { AccountId, AccountBalance, AccountInfo, LedgerId, Transaction, Key, Provider, Executable, SignerSignature, TransactionRecord, PrivateKey } from '@hashgraph/sdk';
+import type {
+  AccountId,
+  AccountBalance,
+  AccountInfo,
+  LedgerId,
+  Transaction,
+  Key,
+  Provider,
+  Executable,
+  SignerSignature,
+  TransactionRecord,
+  PrivateKey,
+} from '@hashgraph/sdk';
 
 import { BladeExtensionInterface } from './models/blade';
 import { waitExtensionInterface } from './connector';
@@ -9,98 +21,85 @@ export type MessageSigner = (message: Uint8Array) => Promise<Uint8Array>;
 
 /**
  * Publicly exposed wallet interface.
- * 
+ *
  * BladeWallet proxies Extension wallet functions to decouple dApp code from
  * Blade's actual implementation of the wallet.
  */
 export class BladeWallet extends Wallet {
+  private _bladeInterface: BladeExtensionInterface | null = null;
 
-    private _bladeInterface: BladeExtensionInterface | null = null;
+  constructor(privateKey?: PrivateKey) {
+    super();
+  }
 
-    constructor(privateKey?: PrivateKey) {
+  async createSession(): Promise<void> {
+    this._bladeInterface = await waitExtensionInterface();
+    await this._bladeInterface.createSession();
+  }
 
-        super();
-
+  /**
+   * Check no Extension and no Session error conditions.
+   */
+  private _getActiveWallet() {
+    if (this._bladeInterface == null) {
+      throw noExtensionError();
     }
-
-    async createSession(): Promise<void> {
-
-        this._bladeInterface = await waitExtensionInterface();
-        await this._bladeInterface.createSession();
-
+    const wallet = this._bladeInterface.getActiveWallet();
+    if (wallet == null) {
+      throw noSessionError();
     }
+    return wallet;
+  }
 
-    /**
-     * Check no Extension and no Session error conditions.
-     */
-    private _getActiveWallet() {
+  async sign(messages: Uint8Array[]): Promise<SignerSignature[]> {
+    return this._getActiveWallet().sign(messages);
+  }
 
-        if (this._bladeInterface == null) {
-            throw noExtensionError();
-        }
-        const wallet = this._bladeInterface.getActiveWallet();
-        if (wallet == null) {
-            throw noSessionError();
-        }
-        return wallet;
-    }
+  async signTransaction(transaction: Transaction): Promise<Transaction> {
+    return this._getActiveWallet().signTransaction(transaction);
+  }
 
-    async sign(messages: Uint8Array[]): Promise<SignerSignature[]> {
+  async sendRequest<RequestT, ResponseT, OutputT>(request: Executable<RequestT, ResponseT, OutputT>): Promise<OutputT> {
+    return this._getActiveWallet().sendRequest(request);
+  }
 
-        return this._getActiveWallet().sign(messages);
+  async checkTransaction(transaction: Transaction): Promise<Transaction> {
+    return this._getActiveWallet().checkTransaction(transaction);
+  }
 
-    }
+  /**
+   * Sets the transaction ID of the transaction to the current account ID of the signer.
+   * @param transaction
+   */
+  async populateTransaction(transaction: Transaction): Promise<Transaction> {
+    return this._getActiveWallet().populateTransaction(transaction);
+  }
 
-    async signTransaction(transaction: Transaction): Promise<Transaction> {
+  getLedgerId(): LedgerId {
+    return this._getActiveWallet().getLedgerId()!;
+  }
 
-        return this._getActiveWallet().signTransaction(transaction);
+  getAccountId(): AccountId {
+    return this._getActiveWallet().getAccountId();
+  }
 
-    }
+  async getAccountBalance(): Promise<AccountBalance> {
+    return this._getActiveWallet().getAccountBalance();
+  }
 
-    async sendRequest<RequestT, ResponseT, OutputT>(request: Executable<RequestT, ResponseT, OutputT>): Promise<OutputT> {
-        return this._getActiveWallet().sendRequest(request);
+  async getAccountInfo(): Promise<AccountInfo> {
+    return this._getActiveWallet().getAccountInfo();
+  }
 
-    }
+  async getAccountRecords(): Promise<TransactionRecord[]> {
+    return this._getActiveWallet().getAccountRecords();
+  }
 
-    async checkTransaction(transaction: Transaction): Promise<Transaction> {
-        return this._getActiveWallet().checkTransaction(transaction);
-    }
+  getProvider(): Provider {
+    return this._getActiveWallet().getProvider();
+  }
 
-    /**
-     * Sets the transaction ID of the transaction to the current account ID of the signer.
-     * @param transaction
-     */
-    async populateTransaction(transaction: Transaction): Promise<Transaction> {
-        return this._getActiveWallet().populateTransaction(transaction);
-    }
-
-    getLedgerId(): LedgerId {
-        return this._getActiveWallet().getLedgerId()!;
-    }
-
-    getAccountId(): AccountId {
-        return this._getActiveWallet().getAccountId();
-
-    }
-
-    async getAccountBalance(): Promise<AccountBalance> {
-        return this._getActiveWallet().getAccountBalance();
-    }
-
-    async getAccountInfo(): Promise<AccountInfo> {
-        return this._getActiveWallet().getAccountInfo();
-    }
-
-    async getAccountRecords(): Promise<TransactionRecord[]> {
-        return this._getActiveWallet().getAccountRecords();
-    }
-
-    getProvider(): Provider {
-        return this._getActiveWallet().getProvider();
-    }
-
-    getAccountKey(): Key {
-        return this._getActiveWallet().getAccountKey();
-    }
-
+  getAccountKey(): Key {
+    return this._getActiveWallet().getAccountKey();
+  }
 }
