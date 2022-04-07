@@ -7,12 +7,6 @@ import { Wallet } from '@hashgraph/sdk';
 
 export type MessageSigner = (message: Uint8Array) => Promise<Uint8Array>;
 
-function createInitialAccount(privateKey: PrivateKey) {
-
-
-
-}
-
 /**
  * Publicly exposed wallet interface.
  * 
