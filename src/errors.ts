@@ -11,7 +11,7 @@ export function noExtensionError(): Error {
 }
 
 export function noSessionError(): Error {
-  const err = new Error(`User does not have an active Blade Wallet session.`);
+  const err = new Error(`User does not have an active Blade session.`);
   err.name = BladeWalletError.NoSession;
   return err;
 }

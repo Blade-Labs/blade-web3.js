@@ -10,26 +10,35 @@ import type {
   SignerSignature,
   TransactionRecord,
   PrivateKey,
+  Signer,
 } from '@hashgraph/sdk';
 
 import { BladeExtensionInterface } from './models/blade';
 import { waitExtensionInterface } from './connector';
 import { noExtensionError, noSessionError } from './errors';
-import { Wallet } from '@hashgraph/sdk';
 
 export type MessageSigner = (message: Uint8Array) => Promise<Uint8Array>;
 
 /**
  * Publicly exposed wallet interface.
  *
- * BladeWallet proxies Extension wallet functions to decouple dApp code from
+ * BladeSigner proxies Extension wallet functions to decouple dApp code from
  * Blade's actual implementation of the wallet.
  */
-export class BladeWallet extends Wallet {
+export class BladeSigner implements Signer {
+
   private _bladeInterface: BladeExtensionInterface | null = null;
 
   constructor(privateKey?: PrivateKey) {
-    super();
+    /// TODO: privateKey constructor not implemented.
+  }
+
+  getNetwork() {
+    return this._bladeInterface!.getActiveWallet()!.getNetwork();
+  }
+
+  getMirrorNetwork() {
+    return this._bladeInterface!.getActiveWallet()!.getMirrorNetwork();
   }
 
   async createSession(): Promise<void> {
@@ -95,11 +104,4 @@ export class BladeWallet extends Wallet {
     return this._getActiveWallet().getAccountRecords();
   }
 
-  getProvider(): Provider {
-    return this._getActiveWallet().getProvider();
-  }
-
-  getAccountKey(): Key {
-    return this._getActiveWallet().getAccountKey();
-  }
 }
