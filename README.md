@@ -1,3 +1,11 @@
+# BladeConnect
+
+A JavaScript/TypeScript library for development of DApps using Blade Wallet on Hedera Network
+
+# Documentation
+
+[Read the TypeDoc API documentation](https://blade-labs.github.io/bladeconnect/)
+
 For example usage and testing the below APIs using a Demo App, please go here and setup the app locally: [Demo App](https://github.com/Blade-Labs/wallet-demo)
 
 
