@@ -24,6 +24,10 @@ npm install @bladelabs/blade-web3.js
 
 The `BladeSigner` class implements the Hashgraph Signer interface and allows access to Blade Wallet operations.
 
+## Usage
+
+To interact with the Blade Extension programmatically, instantiate a BladeSigner object and create a new session.
+
 ```
 import {BladeSigner} from 'blade-web3.js;
 
@@ -41,18 +45,53 @@ async function initBlade() {
 }
 ```
 
-| API                                                        | Description                                                      |
-|:-----------------------------------------------------------|:-----------------------------------------------------------------|
-| `bladeSigner.getAccountId()`                               | Get accountId of active account.                                 |
-| `bladeSigner.getAccountBalance(accountId:AccountId)`        | Get the account balance.                                         |
-| `bladeSigner.getAccountInfo( accountId:AccountId)`          | Get information about a Hedera account on the connected network. |
-| `bladeSigner.checkTransaction(transaction:Transaction)`    | Check that a transaction is valid.                               |
-| `bladeSigner.populateTransaction(transaction:Transaction)` | Set transaction id with active account.                          |
-| `bladeSigner.sendRequest(request:Executable)`              | Sign and execute a transaction with provider account.            |
-| `bladeSigner.signTransaction(transaction:Transaction)`     | Sign a transaction with active wallet account.                   |
-| `bladeSigner.getLedgerId()`                                | Ledger Id of the currently connected network.                    |
-| `bladeSigner.getMirrorNetwork()`                           | Return array of mirror nodes for the current network.            |
-| `bladeSigner.getNetwork()`                                 | Get map of nodes for the current hedera network.                 |
+you can then communicate with the Extension using the BladeSigner object using the Hedera Signer interface:
+
+| API                                                           | Description                                                      |
+| :------------------------------------------------------------ | :--------------------------------------------------------------- |
+| `bladeSigner.getAccountId()`                                  | Get accountId of active account.                                 |
+| `bladeSigner.getAccountBalance( accountId:AccountId\|string)` |                                                                  |
+| `bladeSigner.getAccountInfo( accountId:AccountId\|string)`    | Get information about a Hedera account on the connected network. |
+| `bladeSigner.checkTransaction(transaction:Transaction)`       | Check that a transaction is valid.                               |
+| `bladeSigner.populateTransaction(transaction:Transaction)`    | Set transaction id with active account.                          |
+| `bladeSigner.sendRequest(request:Executable)`                 | Sign and execute a transaction with provider account.            |
+| `bladeSigner.signTransaction(transaction:Transaction)`        | Sign a transaction with active wallet account.                   |
+| `bladeSigner.getLedgerId()`                                   | Ledger Id of the currently connected network.                    |
+| `bladeSigner.getMirrorNetwork()`                              | Return array of mirror nodes for the current network.            |
+| `bladeSigner.getNetwork()`                                    | Get map of nodes for the current hedera network.                 |
 
 # License
 This repository is distributed under the terms of the Apache License (Version 2.0). See [LICENSE](LICENSE) for details.
+
+### Executing a Transfer:
+
+```
+import { TransferTransaction } from '@hashgraph/sdk';
+
+ const amount = new BigNumber(5);
+
+ const transaction = new TransferTransaction(
+    {
+          hbarTransfers: [{
+            accountId: destinationAccountId,
+            amount: amount
+          },
+          {
+            accountId: bladeSigner.getAccountId(),
+            amount: amount.negated()
+          }
+          ]
+        }
+
+      );
+
+const result = await bladeSigner.sendRequest(transaction);
+```
+
+### Getting a transaction receipt:
+
+```
+import { TransactionReceiptQuery } from '@hashgraph/sdk';
+
+const result = await bladeSigner.sendRequest( new TransactionReceiptQuery({transactionId:transactionId}));
+```
