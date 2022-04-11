@@ -13,6 +13,8 @@ Blade Wallet uses the [Hedera Signature and Wallet Interface](https://hips.heder
 
 The `BladeSigner` class implements the Hashgraph Signer interface and allows access to Blade Wallet operations.
 
+## Usage
+
 To interact with the Blade Extension programmatically, instantiate a BladeSigner object and create a new session.
 
 ```
@@ -47,3 +49,37 @@ you can then communicate with the Extension using the BladeSigner object using t
 | `bladeSigner.getLedgerId()`                                   | Ledger Id of the currently connected network.                    |
 | `bladeSigner.getMirrorNetwork()`                              | Return array of mirror nodes for the current network.            |
 | `bladeSigner.getNetwork()`                                    | Get map of nodes for the current hedera network.                 |
+
+
+### Executing a Transfer:
+
+```
+import { TransferTransaction } from '@hashgraph/sdk';
+
+ const amount = new BigNumber(5);
+
+ const transaction = new TransferTransaction(
+    {
+          hbarTransfers: [{
+            accountId: destinationAccountId,
+            amount: amount
+          },
+          {
+            accountId: bladeSigner.getAccountId(),
+            amount: amount.negated()
+          }
+          ]
+        }
+
+      );
+
+const result = await bladeSigner.sendRequest(transaction);
+```
+
+### Getting a transaction receipt:
+
+```
+import { TransactionReceiptQuery } from '@hashgraph/sdk';
+
+const result = await bladeSigner.sendRequest( new TransactionReceiptQuery({transactionId:transactionId}));
+```
