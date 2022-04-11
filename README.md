@@ -13,6 +13,8 @@ Blade Wallet uses the [Hedera Signature and Wallet Interface](https://hips.heder
 
 The `BladeSigner` class implements the Hashgraph Signer interface and allows access to Blade Wallet operations.
 
+To interact with the Blade Extension programmatically, instantiate a BladeSigner object and create a new session.
+
 ```
 import {BladeSigner} from 'blade-web3.js;
 
@@ -30,6 +32,8 @@ async function initBlade() {
 }
 
 ```
+
+you can then communicate with the Extension using the BladeSigner object using the Hedera Signer interface:
 
 | API                                                           | Description                                                      |
 | :------------------------------------------------------------ | :--------------------------------------------------------------- |
