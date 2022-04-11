@@ -1,15 +1,26 @@
-# BladeConnect
+# Blade Web3 JavaScript API
+
+[![npm version](https://badge.fury.io/js/@bladelabs%2Fblade-web3.js.svg)](https://badge.fury.io/js/@bladelabs%2Fblade-web3.js)
 
 A JavaScript/TypeScript library for development of DApps using Blade Wallet on Hedera Network
 
 # Documentation
+[Read the TypeDoc API documentation](https://blade-labs.github.io/blade-web3.js/)
 
-[Read the TypeDoc API documentation](https://blade-labs.github.io/bladeconnect/)
+# Example Usage
 
-For example usage and testing the below APIs using a Demo App, please go here and setup the app locally: [Demo App](https://github.com/Blade-Labs/wallet-demo)
+For example usage and testing the below APIs using a Demo App, please go here and setup the app locally:
+### [Demo App](https://github.com/Blade-Labs/wallet-demo)
 
+# Getting Started
+Blade Wallet uses the [Hedera Signature and Wallet Interface](https://hips.hedera.com/hip/hip-338) as defined here.
 
-Blade Wallet uses the [Hedera Signature and Wallet Interface](https://hips.hedera.com/hip/hip-338)
+## Installation
+This package is available as a [NPM package](https://www.npmjs.com/package/@bladelabs/blade-web3.js).
+
+```
+npm install @bladelabs/blade-web3.js
+```
 
 The `BladeSigner` class implements the Hashgraph Signer interface and allows access to Blade Wallet operations.
 
@@ -28,18 +39,20 @@ async function initBlade() {
     bladeSigner.getAccountId();
 
 }
-
 ```
 
-| API                                                           | Description                                                      |
-| :------------------------------------------------------------ | :--------------------------------------------------------------- |
-| `bladeSigner.getAccountId()`                                  | Get accountId of active account.                                 |
-| `bladeSigner.getAccountBalance( accountId:AccountId\|string)` |                                                                  |
-| `bladeSigner.getAccountInfo( accountId:AccountId\|string)`    | Get information about a Hedera account on the connected network. |
-| `bladeSigner.checkTransaction(transaction:Transaction)`       | Check that a transaction is valid.                               |
-| `bladeSigner.populateTransaction(transaction:Transaction)`    | Set transaction id with active account.                          |
-| `bladeSigner.sendRequest(request:Executable)`                 | Sign and execute a transaction with provider account.            |
-| `bladeSigner.signTransaction(transaction:Transaction)`        | Sign a transaction with active wallet account.                   |
-| `bladeSigner.getLedgerId()`                                   | Ledger Id of the currently connected network.                    |
-| `bladeSigner.getMirrorNetwork()`                              | Return array of mirror nodes for the current network.            |
-| `bladeSigner.getNetwork()`                                    | Get map of nodes for the current hedera network.                 |
+| API                                                        | Description                                                      |
+|:-----------------------------------------------------------|:-----------------------------------------------------------------|
+| `bladeSigner.getAccountId()`                               | Get accountId of active account.                                 |
+| `bladeSigner.getAccountBalance(accountId:AccountId)`        | Get the account balance.                                         |
+| `bladeSigner.getAccountInfo( accountId:AccountId)`          | Get information about a Hedera account on the connected network. |
+| `bladeSigner.checkTransaction(transaction:Transaction)`    | Check that a transaction is valid.                               |
+| `bladeSigner.populateTransaction(transaction:Transaction)` | Set transaction id with active account.                          |
+| `bladeSigner.sendRequest(request:Executable)`              | Sign and execute a transaction with provider account.            |
+| `bladeSigner.signTransaction(transaction:Transaction)`     | Sign a transaction with active wallet account.                   |
+| `bladeSigner.getLedgerId()`                                | Ledger Id of the currently connected network.                    |
+| `bladeSigner.getMirrorNetwork()`                           | Return array of mirror nodes for the current network.            |
+| `bladeSigner.getNetwork()`                                 | Get map of nodes for the current hedera network.                 |
+
+# License
+This repository is distributed under the terms of the Apache License (Version 2.0). See [LICENSE](LICENSE) for details.
