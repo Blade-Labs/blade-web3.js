@@ -18,6 +18,7 @@ jobs:
         cache-dependency-path: package-lock.json
     - run: npm install
     - run: npm install typedoc
+    - run: npx typedoc index.ts
     - name: deploy to github pages
       uses: JamesIves/github-pages-deploy-action@4.1.1
       with:
