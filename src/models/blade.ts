@@ -1,4 +1,4 @@
-import type { Signer } from '@hashgraph/sdk';
+import type { Signer, Wallet } from '@hashgraph/sdk';
 
 declare global {
   interface Window {
@@ -21,7 +21,7 @@ export type BladeExtensionInterface = {
   killSession(): Promise<boolean>;
 
   get hasSession(): boolean;
-  getActiveWallet(): Signer | null;
+  getActiveWallet(): Wallet | null;
 
   addAccount(network: HederaNetwork | null, id: string, privateKey: string, metadata: string | null): Promise<Signer>;
 };
