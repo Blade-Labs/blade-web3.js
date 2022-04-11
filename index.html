@@ -11,8 +11,10 @@
 <p>For example usage and testing the below APIs using a Demo App, please go here and setup the app locally: <a href="https://github.com/Blade-Labs/wallet-demo">Demo App</a></p>
 <p>Blade Wallet uses the <a href="https://hips.hedera.com/hip/hip-338">Hedera Signature and Wallet Interface</a></p>
 <p>The <code>BladeSigner</code> class implements the Hashgraph Signer interface and allows access to Blade Wallet operations.</p>
+<p>To interact with the Blade Extension programmatically, instantiate a BladeSigner object and create a new session.</p>
 <pre><code><span class="hl-0">import</span><span class="hl-1"> {</span><span class="hl-2">BladeSigner</span><span class="hl-1">} </span><span class="hl-0">from</span><span class="hl-1"> </span><span class="hl-3">&#39;blade-web3.js</span><span class="hl-4">;</span><br/><br/><br/><span class="hl-5">initBlade</span><span class="hl-1">();</span><br/><br/><span class="hl-6">async</span><span class="hl-1"> </span><span class="hl-6">function</span><span class="hl-1"> </span><span class="hl-5">initBlade</span><span class="hl-1">() {</span><br/><br/><span class="hl-1">    </span><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">bladeSigner</span><span class="hl-1"> = </span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-5">BladeSigner</span><span class="hl-1">();</span><br/><span class="hl-1">    </span><span class="hl-0">await</span><span class="hl-1"> </span><span class="hl-2">bladeSigner</span><span class="hl-1">.</span><span class="hl-5">createSession</span><span class="hl-1">();</span><br/><br/><span class="hl-1">    </span><span class="hl-8">// bladeSigner object can now be used.</span><br/><span class="hl-1">    </span><span class="hl-2">bladeSigner</span><span class="hl-1">.</span><span class="hl-5">getAccountId</span><span class="hl-1">();</span><br/><br/><span class="hl-1">}</span><br/>
 </code></pre>
+<p>you can then communicate with the Extension using the BladeSigner object using the Hedera Signer interface:</p>
 <table>
 <thead>
 <tr>
