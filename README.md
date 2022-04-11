@@ -22,9 +22,8 @@ This package is available as a [NPM package](https://www.npmjs.com/package/@blad
 npm install @bladelabs/blade-web3.js
 ```
 
-The `BladeSigner` class implements the Hashgraph Signer interface and allows access to Blade Wallet operations.
-
 ## Usage
+The `BladeSigner` class implements the Hashgraph Signer interface and allows access to Blade Wallet operations.
 
 To interact with the Blade Extension programmatically, instantiate a BladeSigner object and create a new session.
 
@@ -60,9 +59,6 @@ you can then communicate with the Extension using the BladeSigner object using t
 | `bladeSigner.getMirrorNetwork()`                              | Return array of mirror nodes for the current network.            |
 | `bladeSigner.getNetwork()`                                    | Get map of nodes for the current hedera network.                 |
 
-# License
-This repository is distributed under the terms of the Apache License (Version 2.0). See [LICENSE](LICENSE) for details.
-
 ### Executing a Transfer:
 
 ```
@@ -89,9 +85,10 @@ const result = await bladeSigner.sendRequest(transaction);
 ```
 
 ### Getting a transaction receipt:
-
 ```
 import { TransactionReceiptQuery } from '@hashgraph/sdk';
 
 const result = await bladeSigner.sendRequest( new TransactionReceiptQuery({transactionId:transactionId}));
 ```
+# License
+This repository is distributed under the terms of the Apache License (Version 2.0). See [LICENSE](LICENSE) for details.
