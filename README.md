@@ -10,7 +10,10 @@ A JavaScript/TypeScript library for development of DApps using Blade Wallet on H
 # Example Usage
 
 For example usage and testing the below APIs using a Demo App, please go here and setup the app locally:
-### [Demo App](https://github.com/Blade-Labs/wallet-demo)
+### [Demo App - Local Setup](https://github.com/Blade-Labs/wallet-demo)
+
+The hosted version of the Demo App can be used to try out some API calls: 
+### [Demo App - Hosted](https://blade-labs.github.io/wallet-demo/)
 
 # Getting Started
 Blade Wallet uses the [Hedera Signature and Wallet Interface](https://hips.hedera.com/hip/hip-338) as defined here.
