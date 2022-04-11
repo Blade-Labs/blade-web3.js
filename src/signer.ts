@@ -9,7 +9,6 @@ import type {
   Executable,
   SignerSignature,
   TransactionRecord,
-  PrivateKey,
   Signer,
 } from '@hashgraph/sdk';
 
@@ -28,10 +27,6 @@ export type MessageSigner = (message: Uint8Array) => Promise<Uint8Array>;
 export class BladeSigner implements Signer {
 
   private _bladeInterface: BladeExtensionInterface | null = null;
-
-  constructor(privateKey?: PrivateKey) {
-    /// TODO: privateKey constructor not implemented.
-  }
 
   getNetwork() {
     return this._bladeInterface!.getActiveWallet()!.getNetwork();
