@@ -4,8 +4,6 @@ import type {
   AccountInfo,
   LedgerId,
   Transaction,
-  Key,
-  Provider,
   Executable,
   SignerSignature,
   TransactionRecord,
