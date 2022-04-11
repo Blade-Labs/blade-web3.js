@@ -6,7 +6,7 @@ Blade Wallet uses the [Hedera Signature and Wallet Interface](https://hips.heder
 The `BladeSigner` class implements the Hashgraph Signer interface and allows access to Blade Wallet operations.
 
 ```
-import {BladeSigner} from 'bladeconnect;
+import {BladeSigner} from 'blade-web3.js;
 
 
 initBlade();
