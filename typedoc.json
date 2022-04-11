@@ -1,0 +1,6 @@
+{
+  "out": "docs",
+  "name": "Blade Web3 Javascript API",
+  "entryPoints": ["./index.ts"],
+  "readme": "./README.md"
+}
