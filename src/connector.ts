@@ -3,7 +3,7 @@ import { noExtensionError } from './errors';
 
 /**
  * Wait for blade extension to be available.
- * @returns
+ * @returns {Promise<BladeExtensionInterface>}
  */
 export function waitExtensionInterface(): Promise<BladeExtensionInterface> {
   return new Promise((resolve, reject) => {

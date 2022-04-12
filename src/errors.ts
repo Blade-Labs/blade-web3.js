@@ -1,6 +1,16 @@
+/**
+ * Errors related to connecting to the Blade Wallet Extension.
+ */
 export enum BladeWalletError {
+
+  /**
+   * Blade Wallet Extension was not found in Chrome browser.
+   */
   ExtensionNotFound = 'ExtensionNotFound',
-  WalletNotReady = 'WalletNotReady',
+
+  /**
+   * Signer could not be used because there is no active session with the Blade Wallet Extension.
+   */
   NoSession = 'NoActiveSession',
 }
 
