@@ -1,5 +1,5 @@
 import { WalletLoadedEvent, BladeExtensionInterface } from './models/blade';
-import { noExtensionError } from './errors';
+import { noExtensionError } from './models/errors';
 
 /**
  * Wait for blade extension to be available.

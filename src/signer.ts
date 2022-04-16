@@ -12,7 +12,7 @@ import type {
 
 import { BladeExtensionInterface } from './models/blade';
 import { waitExtensionInterface } from './connector';
-import { noExtensionError, noSessionError } from './errors';
+import { noExtensionError, noSessionError } from './models/errors';
 
 /**
  * Implements Hedera Signer interface.
