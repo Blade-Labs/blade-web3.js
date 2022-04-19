@@ -15,7 +15,7 @@
     "type": "git",
     "url": "https://github.com/Blade-Labs/blade-web3.js"
   },
-  "license": "ISC",
+  "license": "Apache-2.0",
   "devDependencies": {
     "@hashgraph/sdk": "^2.12.1",
     "prettier": "^2.6.2",
