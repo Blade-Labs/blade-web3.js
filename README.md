@@ -31,7 +31,7 @@ The `BladeSigner` class implements the Hashgraph Signer interface and allows acc
 To interact with the Blade Extension programmatically, instantiate a BladeSigner object and create a new session.
 
 ```
-import {BladeSigner} from 'blade-web3.js;
+import {BladeSigner} from 'blade-web3.js';
 
 
 initBlade();
