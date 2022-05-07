@@ -10,62 +10,90 @@ import type {
   Signer,
 } from '@hashgraph/sdk';
 
-import { BladeExtensionInterface } from './models/blade';
-import { waitExtensionInterface } from './connector';
+import { BladeExtensionInterface, WalletLoadedEvent, WalletUpdatedEvent } from './models/blade';
 import { noExtensionError, noSessionError } from './models/errors';
 
 /**
  * Implements Hedera Signer interface.
  * https://hips.hedera.com/hip/hip-338
- * 
+ *
  * Proxies Extension wallet functions to decouple dApp code from
  * Blade's implementation of the wallet.
  */
 export class BladeSigner implements Signer {
+  /** @hidden */
+  private _onAccountChanged?: () => void;
 
-  /**
-   * @hidden
-   */
-  private _bladeInterface: BladeExtensionInterface | null = null;
+  /** @hidden */
+  private _bladeExtension?: BladeExtensionInterface = window.bladeConnect;
 
-  /**
-   * @returns Network map currently in use by Blade Wallet. 
-   */
-  getNetwork() {
-    return this._bladeInterface!.getActiveWallet()!.getNetwork();
+  /** @hidden */
+  private _getBladeExtension(): BladeExtensionInterface {
+    if (this._bladeExtension == null) {
+      // use of method on BladeSigner before using createSession
+      throw noExtensionError();
+    }
+
+    return this._bladeExtension;
+  }
+
+  constructor() {
+    document.addEventListener(WalletLoadedEvent, async () => {
+      const blade = window.bladeConnect;
+      if (blade == null) {
+        throw new Error("(BUG) unexpected hederaWalletLoaded received but window.bladeConnect is null");
+      }
+
+      this._bladeExtension = blade;
+    });
+
+    document.addEventListener(WalletUpdatedEvent, async () => {
+      this._onAccountChanged?.();
+    });
+  }
+
+  onAccountChanged(callback: () => void) {
+    this._onAccountChanged = callback;
   }
 
   /**
-   * 
+   * @returns Network map currently in use by Blade Wallet.
+   */
+  getNetwork() {
+    return this._getBladeExtension().getActiveWallet()!.getNetwork();
+  }
+
+  /**
    * @returns Array of Hedera mirror network nodes.
    */
   getMirrorNetwork() {
-    return this._bladeInterface!.getActiveWallet()!.getMirrorNetwork();
+    return this._getBladeExtension().getActiveWallet()!.getMirrorNetwork();
   }
 
   /**
    * Create a new session with the Blade Wallet Extension.
+   *
    * All calls will fail until the promise resolves.
+   *
    * @returns Promise that resolves when a new session to the Blade Wallet
    * has succeeded.
    */
   async createSession(): Promise<void> {
-    this._bladeInterface = await waitExtensionInterface();
-    await this._bladeInterface.createSession();
+    // store the blade extension here
+    // the logic is that some methods on the Signer interface are sync
+    await this._getBladeExtension().createSession();
   }
 
   /**
    * @hidden
-   * Check no Extension and no Session error conditions.
    */
   private _getActiveWallet() {
-    if (this._bladeInterface == null) {
-      throw noExtensionError();
-    }
-    const wallet = this._bladeInterface.getActiveWallet();
+    const wallet = this._getBladeExtension().getActiveWallet();
+
     if (wallet == null) {
       throw noSessionError();
     }
+
     return wallet;
   }
 
@@ -92,9 +120,11 @@ export class BladeSigner implements Signer {
 
   /**
    * Determines if all the properties required are set and sets the transaction ID.
+   *
    * If the transaction ID was already set it checks if the account ID of it is
    * the same as the users.
-   * @param transaction 
+   *
+   * @param transaction
    * @returns Promise that resolves to Transaction with correct transaction ID.
    */
   async checkTransaction(transaction: Transaction): Promise<Transaction> {
@@ -131,7 +161,6 @@ export class BladeSigner implements Signer {
   }
 
   /**
-   * 
    * @returns Promise that resolves to AccountInfo of the account currently active.
    */
   async getAccountInfo(): Promise<AccountInfo> {
@@ -139,11 +168,9 @@ export class BladeSigner implements Signer {
   }
 
   /**
-   * 
    * @returns Promise that resolves to array of records of recent account transactions.
    */
   async getAccountRecords(): Promise<TransactionRecord[]> {
     return this._getActiveWallet().getAccountRecords();
   }
-
 }

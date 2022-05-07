@@ -7,6 +7,7 @@ declare global {
 }
 
 export const WalletLoadedEvent = 'hederaWalletLoaded';
+export const WalletUpdatedEvent = 'hederaWalletUpdated';
 
 export enum HederaNetwork {
   Mainnet = 'Mainnet',
