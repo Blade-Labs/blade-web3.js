@@ -10,7 +10,13 @@ import type {
   Signer,
 } from '@hashgraph/sdk';
 
-import { BladeExtensionInterface, WalletLoadedEvent, WalletUpdatedEvent } from './models/blade';
+import { 
+  BladeExtensionInterface,
+  WalletLoadedEvent,
+  WalletUpdatedEvent,
+  WalletLockedEvent
+} from './models/blade';
+
 import { noExtensionError, noSessionError } from './models/errors';
 
 /**
@@ -25,10 +31,15 @@ export class BladeSigner implements Signer {
   private _onAccountChanged?: () => void;
 
   /** @hidden */
+  private _onWalletLocked?: () => void;
+
+  /** @hidden */
   private _bladeExtension?: BladeExtensionInterface = window.bladeConnect;
 
   /** @hidden */
   private _getBladeExtension(): BladeExtensionInterface {
+    this._bladeExtension = window.bladeConnect;
+
     if (this._bladeExtension == null) {
       // use of method on BladeSigner before using createSession
       throw noExtensionError();
@@ -40,6 +51,7 @@ export class BladeSigner implements Signer {
   constructor() {
     document.addEventListener(WalletLoadedEvent, async () => {
       const blade = window.bladeConnect;
+      
       if (blade == null) {
         throw new Error("(BUG) unexpected hederaWalletLoaded received but window.bladeConnect is null");
       }
@@ -50,10 +62,31 @@ export class BladeSigner implements Signer {
     document.addEventListener(WalletUpdatedEvent, async () => {
       this._onAccountChanged?.();
     });
+
+    document.addEventListener(WalletLockedEvent, async () => {
+      try {
+        // Try to destroy the user's current session (ok if fails)
+        if (this._bladeExtension != null) await this._getBladeExtension().killSession();
+      } catch (e) {
+        console.error(e);
+      }
+
+      this._onWalletLocked?.();
+    });
   }
 
+  /**
+   * @param callback synchronous function to run at every account change
+   */
   onAccountChanged(callback: () => void) {
     this._onAccountChanged = callback;
+  }
+
+  /**
+   * @param callback synchronous function to run every time wallet is locked
+   */
+  onWalletLocked(callback: () => void) {
+    this._onWalletLocked = callback;
   }
 
   /**
