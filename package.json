@@ -1,6 +1,6 @@
 {
   "name": "@bladelabs/blade-web3.js",
-  "version": "0.9.7",
+  "version": "0.9.8",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
