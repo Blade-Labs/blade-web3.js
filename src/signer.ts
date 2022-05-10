@@ -64,13 +64,6 @@ export class BladeSigner implements Signer {
     });
 
     document.addEventListener(WalletLockedEvent, async () => {
-      try {
-        // Try to destroy the user's current session (ok if fails)
-        if (this._bladeExtension != null) await this._getBladeExtension().killSession();
-      } catch (e) {
-        console.error(e);
-      }
-
       this._onWalletLocked?.();
     });
   }
@@ -126,7 +119,7 @@ export class BladeSigner implements Signer {
     if (wallet == null) {
       throw noSessionError();
     }
-
+    
     return wallet;
   }
 

@@ -30,10 +30,8 @@ export enum ErrorCodes {
  * Possible error thrown by WalletExtension
  */
 export type WalletError = {
-
     type: ErrorTypes;
     message: string;
     code: ErrorCodes;
     isError: boolean;
-
 }
