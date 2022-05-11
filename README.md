@@ -61,6 +61,8 @@ you can then communicate with the Extension using the BladeSigner object using t
 | `bladeSigner.getLedgerId()`                                   | Ledger Id of the currently connected network.                    |
 | `bladeSigner.getMirrorNetwork()`                              | Return array of mirror nodes for the current network.            |
 | `bladeSigner.getNetwork()`                                    | Get map of nodes for the current hedera network.                 |
+| `bladeSigner.onAccountChanged(callback:Function)`             | Run callback when the wallet account changes.                    |
+| `bladeSigner.onWalletLocked(callback:Function)`               | Run callback when the wallet is locked.                          |
 
 ### Executing a Transfer:
 
