@@ -49,20 +49,20 @@ async function initBlade() {
 
 you can then communicate with the Extension using the BladeSigner object using the Hedera Signer interface:
 
-| API                                                           | Description                                                      |
-| :------------------------------------------------------------ | :--------------------------------------------------------------- |
-| `bladeSigner.getAccountId()`                                  | Get accountId of active account.                                 |
-| `bladeSigner.getAccountBalance( accountId:AccountId\|string)` |                                                                  |
-| `bladeSigner.getAccountInfo( accountId:AccountId\|string)`    | Get information about a Hedera account on the connected network. |
-| `bladeSigner.checkTransaction(transaction:Transaction)`       | Check that a transaction is valid.                               |
-| `bladeSigner.populateTransaction(transaction:Transaction)`    | Set transaction id with active account.                          |
-| `bladeSigner.sendRequest(request:Executable)`                 | Sign and execute a transaction with provider account.            |
-| `bladeSigner.signTransaction(transaction:Transaction)`        | Sign a transaction with active wallet account.                   |
-| `bladeSigner.getLedgerId()`                                   | Ledger Id of the currently connected network.                    |
-| `bladeSigner.getMirrorNetwork()`                              | Return array of mirror nodes for the current network.            |
-| `bladeSigner.getNetwork()`                                    | Get map of nodes for the current hedera network.                 |
-| `bladeSigner.onAccountChanged(callback:Function)`             | Run callback when the wallet account changes.                    |
-| `bladeSigner.onWalletLocked(callback:Function)`               | Run callback when the wallet is locked.                          |
+| API                                                        | Description                                                      |
+|:-----------------------------------------------------------| :--------------------------------------------------------------- |
+| `bladeSigner.getAccountId()`                               | Get accountId of active account.                                 |
+| `bladeSigner.getAccountBalance( accountId:AccountId\       |string)` |                                                                  |
+| `bladeSigner.getAccountInfo( accountId:AccountId\          |string)`    | Get information about a Hedera account on the connected network. |
+| `bladeSigner.checkTransaction(transaction:Transaction)`    | Check that a transaction is valid.                               |
+| `bladeSigner.populateTransaction(transaction:Transaction)` | Set transaction id with active account.                          |
+| `bladeSigner.call(request:Executable)`                     | Sign and execute a transaction with provider account.            |
+| `bladeSigner.signTransaction(transaction:Transaction)`     | Sign a transaction with active wallet account.                   |
+| `bladeSigner.getLedgerId()`                                | Ledger Id of the currently connected network.                    |
+| `bladeSigner.getMirrorNetwork()`                           | Return array of mirror nodes for the current network.            |
+| `bladeSigner.getNetwork()`                                 | Get map of nodes for the current hedera network.                 |
+| `bladeSigner.onAccountChanged(callback:Function)`          | Run callback when the wallet account changes.                    |
+| `bladeSigner.onWalletLocked(callback:Function)`            | Run callback when the wallet is locked.                          |
 
 ### Executing a Transfer:
 
@@ -86,14 +86,14 @@ import { TransferTransaction } from '@hashgraph/sdk';
 
       );
 
-const result = await bladeSigner.sendRequest(transaction);
+const result = await bladeSigner.call(transaction);
 ```
 
 ### Getting a transaction receipt:
 ```
 import { TransactionReceiptQuery } from '@hashgraph/sdk';
 
-const result = await bladeSigner.sendRequest( new TransactionReceiptQuery({transactionId:transactionId}));
+const result = await bladeSigner.call( new TransactionReceiptQuery({transactionId:transactionId}));
 ```
 # License
 This repository is distributed under the terms of the Apache License (Version 2.0). See [LICENSE](LICENSE) for details.
