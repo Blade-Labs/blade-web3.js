@@ -56,12 +56,12 @@
 <td align="left">Get accountId of active account.</td>
 </tr>
 <tr>
-<td align="left"><code>bladeSigner.getAccountBalance( accountId:AccountId|string)</code></td>
-<td align="left"></td>
+<td align="left">`bladeSigner.getAccountBalance( accountId:AccountId\</td>
+<td align="left">string)`</td>
 </tr>
 <tr>
-<td align="left"><code>bladeSigner.getAccountInfo( accountId:AccountId|string)</code></td>
-<td align="left">Get information about a Hedera account on the connected network.</td>
+<td align="left">`bladeSigner.getAccountInfo( accountId:AccountId\</td>
+<td align="left">string)`</td>
 </tr>
 <tr>
 <td align="left"><code>bladeSigner.checkTransaction(transaction:Transaction)</code></td>
@@ -72,7 +72,7 @@
 <td align="left">Set transaction id with active account.</td>
 </tr>
 <tr>
-<td align="left"><code>bladeSigner.sendRequest(request:Executable)</code></td>
+<td align="left"><code>bladeSigner.call(request:Executable)</code></td>
 <td align="left">Sign and execute a transaction with provider account.</td>
 </tr>
 <tr>
@@ -104,13 +104,13 @@
 <a href="#executing-a-transfer" id="executing-a-transfer" style="color: inherit; text-decoration: none;">
   <h3>Executing a Transfer:</h3>
 </a>
-<pre><code><span class="hl-2">import</span><span class="hl-1"> { </span><span class="hl-0">TransferTransaction</span><span class="hl-1"> } </span><span class="hl-2">from</span><span class="hl-1"> </span><span class="hl-3">&#39;@hashgraph/sdk&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-1"> </span><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">amount</span><span class="hl-1"> = </span><span class="hl-5">new</span><span class="hl-1"> </span><span class="hl-4">BigNumber</span><span class="hl-1">(</span><span class="hl-8">5</span><span class="hl-1">);</span><br/><br/><span class="hl-1"> </span><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">transaction</span><span class="hl-1"> = </span><span class="hl-5">new</span><span class="hl-1"> </span><span class="hl-4">TransferTransaction</span><span class="hl-1">(</span><br/><span class="hl-1">    {</span><br/><span class="hl-1">          </span><span class="hl-0">hbarTransfers:</span><span class="hl-1"> [{</span><br/><span class="hl-1">            </span><span class="hl-0">accountId:</span><span class="hl-1"> </span><span class="hl-0">destinationAccountId</span><span class="hl-1">,</span><br/><span class="hl-1">            </span><span class="hl-0">amount:</span><span class="hl-1"> </span><span class="hl-0">amount</span><br/><span class="hl-1">          },</span><br/><span class="hl-1">          {</span><br/><span class="hl-1">            </span><span class="hl-0">accountId:</span><span class="hl-1"> </span><span class="hl-0">bladeSigner</span><span class="hl-1">.</span><span class="hl-4">getAccountId</span><span class="hl-1">(),</span><br/><span class="hl-1">            </span><span class="hl-0">amount:</span><span class="hl-1"> </span><span class="hl-0">amount</span><span class="hl-1">.</span><span class="hl-4">negated</span><span class="hl-1">()</span><br/><span class="hl-1">          }</span><br/><span class="hl-1">          ]</span><br/><span class="hl-1">        }</span><br/><br/><span class="hl-1">      );</span><br/><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">result</span><span class="hl-1"> = </span><span class="hl-2">await</span><span class="hl-1"> </span><span class="hl-0">bladeSigner</span><span class="hl-1">.</span><span class="hl-4">sendRequest</span><span class="hl-1">(</span><span class="hl-0">transaction</span><span class="hl-1">);</span>
+<pre><code><span class="hl-2">import</span><span class="hl-1"> { </span><span class="hl-0">TransferTransaction</span><span class="hl-1"> } </span><span class="hl-2">from</span><span class="hl-1"> </span><span class="hl-3">&#39;@hashgraph/sdk&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-1"> </span><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">amount</span><span class="hl-1"> = </span><span class="hl-5">new</span><span class="hl-1"> </span><span class="hl-4">BigNumber</span><span class="hl-1">(</span><span class="hl-8">5</span><span class="hl-1">);</span><br/><br/><span class="hl-1"> </span><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">transaction</span><span class="hl-1"> = </span><span class="hl-5">new</span><span class="hl-1"> </span><span class="hl-4">TransferTransaction</span><span class="hl-1">(</span><br/><span class="hl-1">    {</span><br/><span class="hl-1">          </span><span class="hl-0">hbarTransfers:</span><span class="hl-1"> [{</span><br/><span class="hl-1">            </span><span class="hl-0">accountId:</span><span class="hl-1"> </span><span class="hl-0">destinationAccountId</span><span class="hl-1">,</span><br/><span class="hl-1">            </span><span class="hl-0">amount:</span><span class="hl-1"> </span><span class="hl-0">amount</span><br/><span class="hl-1">          },</span><br/><span class="hl-1">          {</span><br/><span class="hl-1">            </span><span class="hl-0">accountId:</span><span class="hl-1"> </span><span class="hl-0">bladeSigner</span><span class="hl-1">.</span><span class="hl-4">getAccountId</span><span class="hl-1">(),</span><br/><span class="hl-1">            </span><span class="hl-0">amount:</span><span class="hl-1"> </span><span class="hl-0">amount</span><span class="hl-1">.</span><span class="hl-4">negated</span><span class="hl-1">()</span><br/><span class="hl-1">          }</span><br/><span class="hl-1">          ]</span><br/><span class="hl-1">        }</span><br/><br/><span class="hl-1">      );</span><br/><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">result</span><span class="hl-1"> = </span><span class="hl-2">await</span><span class="hl-1"> </span><span class="hl-0">bladeSigner</span><span class="hl-1">.</span><span class="hl-4">call</span><span class="hl-1">(</span><span class="hl-0">transaction</span><span class="hl-1">);</span>
 </code></pre>
 
 <a href="#getting-a-transaction-receipt" id="getting-a-transaction-receipt" style="color: inherit; text-decoration: none;">
   <h3>Getting a transaction receipt:</h3>
 </a>
-<pre><code><span class="hl-2">import</span><span class="hl-1"> { </span><span class="hl-0">TransactionReceiptQuery</span><span class="hl-1"> } </span><span class="hl-2">from</span><span class="hl-1"> </span><span class="hl-3">&#39;@hashgraph/sdk&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">result</span><span class="hl-1"> = </span><span class="hl-2">await</span><span class="hl-1"> </span><span class="hl-0">bladeSigner</span><span class="hl-1">.</span><span class="hl-4">sendRequest</span><span class="hl-1">( </span><span class="hl-5">new</span><span class="hl-1"> </span><span class="hl-4">TransactionReceiptQuery</span><span class="hl-1">({</span><span class="hl-0">transactionId:transactionId</span><span class="hl-1">}));</span>
+<pre><code><span class="hl-2">import</span><span class="hl-1"> { </span><span class="hl-0">TransactionReceiptQuery</span><span class="hl-1"> } </span><span class="hl-2">from</span><span class="hl-1"> </span><span class="hl-3">&#39;@hashgraph/sdk&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">result</span><span class="hl-1"> = </span><span class="hl-2">await</span><span class="hl-1"> </span><span class="hl-0">bladeSigner</span><span class="hl-1">.</span><span class="hl-4">call</span><span class="hl-1">( </span><span class="hl-5">new</span><span class="hl-1"> </span><span class="hl-4">TransactionReceiptQuery</span><span class="hl-1">({</span><span class="hl-0">transactionId:transactionId</span><span class="hl-1">}));</span>
 </code></pre>
 
 <a href="#license" id="license" style="color: inherit; text-decoration: none;">
