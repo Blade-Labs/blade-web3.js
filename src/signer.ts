@@ -10,7 +10,7 @@ import type {
   Signer,
 } from '@hashgraph/sdk';
 
-import { 
+import {
   BladeExtensionInterface,
   WalletLoadedEvent,
   WalletUpdatedEvent,
@@ -52,7 +52,7 @@ export class BladeSigner implements Signer {
   constructor() {
     document.addEventListener(WalletLoadedEvent, async () => {
       const blade = window.bladeConnect;
-      
+
       if (blade == null) {
         throw new Error("(BUG) unexpected hederaWalletLoaded received but window.bladeConnect is null");
       }
@@ -120,7 +120,7 @@ export class BladeSigner implements Signer {
     if (wallet == null) {
       throw noSessionError();
     }
-    
+
     return wallet;
   }
 
@@ -137,12 +137,12 @@ export class BladeSigner implements Signer {
    * @param transaction A Hedera transaction.
    * @returns A promise that resolves to the transaction with the signature appended.
    */
-  async signTransaction(transaction: Transaction): Promise<Transaction> {
+  async signTransaction<T extends  Transaction>(transaction: T): Promise<T> {
     return this._getActiveWallet().signTransaction(transaction);
   }
 
-  async sendRequest<RequestT, ResponseT, OutputT>(request: Executable<RequestT, ResponseT, OutputT>): Promise<OutputT> {
-    return this._getActiveWallet().sendRequest(request);
+  async call<RequestT, ResponseT, OutputT>(request: Executable<RequestT, ResponseT, OutputT>): Promise<OutputT> {
+    return this._getActiveWallet().call(request);
   }
 
   /**
@@ -154,7 +154,7 @@ export class BladeSigner implements Signer {
    * @param transaction
    * @returns Promise that resolves to Transaction with correct transaction ID.
    */
-  async checkTransaction(transaction: Transaction): Promise<Transaction> {
+  async checkTransaction<T extends Transaction>(transaction: T): Promise<T> {
     return this._getActiveWallet().checkTransaction(transaction);
   }
 
@@ -162,7 +162,7 @@ export class BladeSigner implements Signer {
    * Sets the transaction ID of the transaction to the current account ID of the signer.
    * @param transaction
    */
-  async populateTransaction(transaction: Transaction): Promise<Transaction> {
+  async populateTransaction<T extends Transaction>(transaction: T): Promise<T> {
     return this._getActiveWallet().populateTransaction(transaction);
   }
 
