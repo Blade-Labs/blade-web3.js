@@ -112,6 +112,13 @@ export class BladeSigner implements Signer {
   }
 
   /**
+   * Kills a session with the Blade Wallet Extension.
+   */
+  async killSession(): Promise<boolean> {
+    return this._getBladeExtension().killSession();
+  }
+
+  /**
    * @hidden
    */
   private _getActiveWallet() {
