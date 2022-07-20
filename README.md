@@ -53,7 +53,7 @@ you can then communicate with the Extension using the BladeSigner object using t
 |:-----------------------------------------------------------| :--------------------------------------------------------------- |
 | `bladeSigner.createSession(network:HederaNetwork,dAppCode:number)`| Optional params. Create session with Blade extension.                                 |
 | `bladeSigner.getAccountId()`                               | Get accountId of active account.                                 |
-| `bladeSigner.getAccountBalance( accountId:AccountId⎮string)` |ddasasd                                                               |
+| `bladeSigner.getAccountBalance( accountId:AccountId⎮string)` |                                                               |
 | `bladeSigner.getAccountInfo( accountId:AccountId⎮string)`    | Get information about a Hedera account on the connected network. |
 | `bladeSigner.checkTransaction(transaction:Transaction)`    | Check that a transaction is valid.                               |
 | `bladeSigner.populateTransaction(transaction:Transaction)` | Set transaction id with active account.                          |
