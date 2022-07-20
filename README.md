@@ -41,6 +41,7 @@ async function initBlade() {
     const bladeSigner = new BladeSigner();
     const params = {
       network: HederaNetwork.Mainnet,
+      // dAppCode - optional while testing, request specific one by contacting us.
       dAppCode: "yourAwesomeApp"
     }
     // create session with optional parameters.
