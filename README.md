@@ -32,14 +32,19 @@ To interact with the Blade Extension programmatically, instantiate a BladeSigner
 
 ``` javascript
 import {BladeSigner} from 'blade-web3.js';
-
+import { HederaNetwork } from 'blade-web3.js/models/blade';
 
 initBlade();
 
 async function initBlade() {
 
     const bladeSigner = new BladeSigner();
-    await bladeSigner.createSession();
+    const params = {
+      network: HederaNetwork.Mainnet,
+      dAppCode: "yourAwesomeApp"
+    }
+    // create session with optional parameters.
+    await bladeSigner.createSession(params);
 
     // bladeSigner object can now be used.
     bladeSigner.getAccountId();
@@ -51,7 +56,7 @@ you can then communicate with the Extension using the BladeSigner object using t
 
 | API                                                        | Description                                                      |
 |:-----------------------------------------------------------| :--------------------------------------------------------------- |
-| `bladeSigner.createSession(network:HederaNetwork,dAppCode:number)`| Optional params. Create session with Blade extension.                                 |
+| `bladeSigner.createSession(params:SessionParams)`| Optional params. Create session with Blade extension.                                 |
 | `bladeSigner.getAccountId()`                               | Get accountId of active account.                                 |
 | `bladeSigner.getAccountBalance( accountId:AccountId⎮string)` |                                                               |
 | `bladeSigner.getAccountInfo( accountId:AccountId⎮string)`    | Get information about a Hedera account on the connected network. |

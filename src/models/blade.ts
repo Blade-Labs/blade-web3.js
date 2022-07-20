@@ -15,11 +15,16 @@ export enum HederaNetwork {
   Testnet = 'Testnet',
 }
 
+export type SessionParams = {
+  network?: HederaNetwork,
+  dAppCode?: string
+}
+
 /**
  * The interface exposed by the Extension for wallet interactions.
  */
 export type BladeExtensionInterface = {
-  createSession(network?: HederaNetwork, dAppCode?: number): Promise<Signer>;
+  createSession(network?: HederaNetwork, dAppCode?: string): Promise<Signer>;
   killSession(): Promise<boolean>;
 
   get hasSession(): boolean;
