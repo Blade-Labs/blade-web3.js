@@ -18,7 +18,7 @@
 <a href="#demo-app---local-setup" id="demo-app---local-setup" style="color: inherit; text-decoration: none;">
   <h3><a href="https://github.com/Blade-Labs/wallet-demo">Demo App - Local Setup</a></h3>
 </a>
-<p>The hosted version of the Demo App can be used to try out some API calls: </p>
+<p>The hosted version of the Demo App can be used to try out some API calls:</p>
 
 <a href="#demo-app---hosted" id="demo-app---hosted" style="color: inherit; text-decoration: none;">
   <h3><a href="https://blade-labs.github.io/wallet-demo/">Demo App - Hosted</a></h3>
@@ -33,7 +33,7 @@
   <h2>Installation</h2>
 </a>
 <p>This package is available as a <a href="https://www.npmjs.com/package/@bladelabs/blade-web3.js">NPM package</a>.</p>
-<pre><code><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-0">install</span><span class="hl-1"> @</span><span class="hl-0">bladelabs</span><span class="hl-1">/</span><span class="hl-0">blade</span><span class="hl-1">-</span><span class="hl-0">web3</span><span class="hl-1">.</span><span class="hl-0">js</span>
+<pre><code class="language-bash"><span class="hl-0">npm install @bladelabs/blade-web3.js</span>
 </code></pre>
 
 <a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
@@ -41,7 +41,7 @@
 </a>
 <p>The <code>BladeSigner</code> class implements the Hashgraph Signer interface and allows access to Blade Wallet operations.</p>
 <p>To interact with the Blade Extension programmatically, instantiate a BladeSigner object and create a new session.</p>
-<pre><code><span class="hl-2">import</span><span class="hl-1"> {</span><span class="hl-0">BladeSigner</span><span class="hl-1">} </span><span class="hl-2">from</span><span class="hl-1"> </span><span class="hl-3">&#39;blade-web3.js&#39;</span><span class="hl-1">;</span><br/><br/><br/><span class="hl-4">initBlade</span><span class="hl-1">();</span><br/><br/><span class="hl-5">async</span><span class="hl-1"> </span><span class="hl-5">function</span><span class="hl-1"> </span><span class="hl-4">initBlade</span><span class="hl-1">() {</span><br/><br/><span class="hl-1">    </span><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">bladeSigner</span><span class="hl-1"> = </span><span class="hl-5">new</span><span class="hl-1"> </span><span class="hl-4">BladeSigner</span><span class="hl-1">();</span><br/><span class="hl-1">    </span><span class="hl-2">await</span><span class="hl-1"> </span><span class="hl-0">bladeSigner</span><span class="hl-1">.</span><span class="hl-4">createSession</span><span class="hl-1">();</span><br/><br/><span class="hl-1">    </span><span class="hl-7">// bladeSigner object can now be used.</span><br/><span class="hl-1">    </span><span class="hl-0">bladeSigner</span><span class="hl-1">.</span><span class="hl-4">getAccountId</span><span class="hl-1">();</span><br/><br/><span class="hl-1">}</span>
+<pre><code class="language-javascript"><span class="hl-1">import</span><span class="hl-0"> {</span><span class="hl-2">BladeSigner</span><span class="hl-0">} </span><span class="hl-1">from</span><span class="hl-0"> </span><span class="hl-3">&#39;blade-web3.js&#39;</span><span class="hl-0">;</span><br/><br/><br/><span class="hl-4">initBlade</span><span class="hl-0">();</span><br/><br/><span class="hl-5">async</span><span class="hl-0"> </span><span class="hl-5">function</span><span class="hl-0"> </span><span class="hl-4">initBlade</span><span class="hl-0">() {</span><br/><br/><span class="hl-0">    </span><span class="hl-5">const</span><span class="hl-0"> </span><span class="hl-6">bladeSigner</span><span class="hl-0"> = </span><span class="hl-5">new</span><span class="hl-0"> </span><span class="hl-4">BladeSigner</span><span class="hl-0">();</span><br/><span class="hl-0">    </span><span class="hl-1">await</span><span class="hl-0"> </span><span class="hl-2">bladeSigner</span><span class="hl-0">.</span><span class="hl-4">createSession</span><span class="hl-0">();</span><br/><br/><span class="hl-0">    </span><span class="hl-7">// bladeSigner object can now be used.</span><br/><span class="hl-0">    </span><span class="hl-2">bladeSigner</span><span class="hl-0">.</span><span class="hl-4">getAccountId</span><span class="hl-0">();</span><br/><br/><span class="hl-0">}</span>
 </code></pre>
 <p>you can then communicate with the Extension using the BladeSigner object using the Hedera Signer interface:</p>
 <table>
@@ -52,16 +52,20 @@
 </tr>
 </thead>
 <tbody><tr>
+<td align="left"><code>bladeSigner.createSession(network:HederaNetwork,dAppCode:number)</code></td>
+<td align="left">Optional params. Create session with Blade extension.</td>
+</tr>
+<tr>
 <td align="left"><code>bladeSigner.getAccountId()</code></td>
 <td align="left">Get accountId of active account.</td>
 </tr>
 <tr>
-<td align="left">`bladeSigner.getAccountBalance( accountId:AccountId\</td>
-<td align="left">string)`</td>
+<td align="left"><code>bladeSigner.getAccountBalance( accountId:AccountId⎮string)</code></td>
+<td align="left">ddasasd</td>
 </tr>
 <tr>
-<td align="left">`bladeSigner.getAccountInfo( accountId:AccountId\</td>
-<td align="left">string)`</td>
+<td align="left"><code>bladeSigner.getAccountInfo( accountId:AccountId⎮string)</code></td>
+<td align="left">Get information about a Hedera account on the connected network.</td>
 </tr>
 <tr>
 <td align="left"><code>bladeSigner.checkTransaction(transaction:Transaction)</code></td>
@@ -104,13 +108,13 @@
 <a href="#executing-a-transfer" id="executing-a-transfer" style="color: inherit; text-decoration: none;">
   <h3>Executing a Transfer:</h3>
 </a>
-<pre><code><span class="hl-2">import</span><span class="hl-1"> { </span><span class="hl-0">TransferTransaction</span><span class="hl-1"> } </span><span class="hl-2">from</span><span class="hl-1"> </span><span class="hl-3">&#39;@hashgraph/sdk&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-1"> </span><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">amount</span><span class="hl-1"> = </span><span class="hl-5">new</span><span class="hl-1"> </span><span class="hl-4">BigNumber</span><span class="hl-1">(</span><span class="hl-8">5</span><span class="hl-1">);</span><br/><br/><span class="hl-1"> </span><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">transaction</span><span class="hl-1"> = </span><span class="hl-5">new</span><span class="hl-1"> </span><span class="hl-4">TransferTransaction</span><span class="hl-1">(</span><br/><span class="hl-1">    {</span><br/><span class="hl-1">          </span><span class="hl-0">hbarTransfers:</span><span class="hl-1"> [{</span><br/><span class="hl-1">            </span><span class="hl-0">accountId:</span><span class="hl-1"> </span><span class="hl-0">destinationAccountId</span><span class="hl-1">,</span><br/><span class="hl-1">            </span><span class="hl-0">amount:</span><span class="hl-1"> </span><span class="hl-0">amount</span><br/><span class="hl-1">          },</span><br/><span class="hl-1">          {</span><br/><span class="hl-1">            </span><span class="hl-0">accountId:</span><span class="hl-1"> </span><span class="hl-0">bladeSigner</span><span class="hl-1">.</span><span class="hl-4">getAccountId</span><span class="hl-1">(),</span><br/><span class="hl-1">            </span><span class="hl-0">amount:</span><span class="hl-1"> </span><span class="hl-0">amount</span><span class="hl-1">.</span><span class="hl-4">negated</span><span class="hl-1">()</span><br/><span class="hl-1">          }</span><br/><span class="hl-1">          ]</span><br/><span class="hl-1">        }</span><br/><br/><span class="hl-1">      );</span><br/><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">result</span><span class="hl-1"> = </span><span class="hl-2">await</span><span class="hl-1"> </span><span class="hl-0">bladeSigner</span><span class="hl-1">.</span><span class="hl-4">call</span><span class="hl-1">(</span><span class="hl-0">transaction</span><span class="hl-1">);</span>
+<pre><code class="language-javascript"><span class="hl-1">import</span><span class="hl-0"> { </span><span class="hl-2">TransferTransaction</span><span class="hl-0"> } </span><span class="hl-1">from</span><span class="hl-0"> </span><span class="hl-3">&#39;@hashgraph/sdk&#39;</span><span class="hl-0">;</span><br/><br/><span class="hl-0"> </span><span class="hl-5">const</span><span class="hl-0"> </span><span class="hl-6">amount</span><span class="hl-0"> = </span><span class="hl-5">new</span><span class="hl-0"> </span><span class="hl-4">BigNumber</span><span class="hl-0">(</span><span class="hl-8">5</span><span class="hl-0">);</span><br/><br/><span class="hl-0"> </span><span class="hl-5">const</span><span class="hl-0"> </span><span class="hl-6">transaction</span><span class="hl-0"> = </span><span class="hl-5">new</span><span class="hl-0"> </span><span class="hl-4">TransferTransaction</span><span class="hl-0">(</span><br/><span class="hl-0">    {</span><br/><span class="hl-0">          </span><span class="hl-2">hbarTransfers:</span><span class="hl-0"> [{</span><br/><span class="hl-0">            </span><span class="hl-2">accountId:</span><span class="hl-0"> </span><span class="hl-2">destinationAccountId</span><span class="hl-0">,</span><br/><span class="hl-0">            </span><span class="hl-2">amount:</span><span class="hl-0"> </span><span class="hl-2">amount</span><br/><span class="hl-0">          },</span><br/><span class="hl-0">          {</span><br/><span class="hl-0">            </span><span class="hl-2">accountId:</span><span class="hl-0"> </span><span class="hl-2">bladeSigner</span><span class="hl-0">.</span><span class="hl-4">getAccountId</span><span class="hl-0">(),</span><br/><span class="hl-0">            </span><span class="hl-2">amount:</span><span class="hl-0"> </span><span class="hl-2">amount</span><span class="hl-0">.</span><span class="hl-4">negated</span><span class="hl-0">()</span><br/><span class="hl-0">          }</span><br/><span class="hl-0">          ]</span><br/><span class="hl-0">        }</span><br/><br/><span class="hl-0">      );</span><br/><br/><span class="hl-5">const</span><span class="hl-0"> </span><span class="hl-6">result</span><span class="hl-0"> = </span><span class="hl-1">await</span><span class="hl-0"> </span><span class="hl-2">bladeSigner</span><span class="hl-0">.</span><span class="hl-4">call</span><span class="hl-0">(</span><span class="hl-2">transaction</span><span class="hl-0">);</span>
 </code></pre>
 
 <a href="#getting-a-transaction-receipt" id="getting-a-transaction-receipt" style="color: inherit; text-decoration: none;">
   <h3>Getting a transaction receipt:</h3>
 </a>
-<pre><code><span class="hl-2">import</span><span class="hl-1"> { </span><span class="hl-0">TransactionReceiptQuery</span><span class="hl-1"> } </span><span class="hl-2">from</span><span class="hl-1"> </span><span class="hl-3">&#39;@hashgraph/sdk&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">result</span><span class="hl-1"> = </span><span class="hl-2">await</span><span class="hl-1"> </span><span class="hl-0">bladeSigner</span><span class="hl-1">.</span><span class="hl-4">call</span><span class="hl-1">( </span><span class="hl-5">new</span><span class="hl-1"> </span><span class="hl-4">TransactionReceiptQuery</span><span class="hl-1">({</span><span class="hl-0">transactionId:transactionId</span><span class="hl-1">}));</span>
+<pre><code class="language-javascript"><span class="hl-1">import</span><span class="hl-0"> { </span><span class="hl-2">TransactionReceiptQuery</span><span class="hl-0"> } </span><span class="hl-1">from</span><span class="hl-0"> </span><span class="hl-3">&#39;@hashgraph/sdk&#39;</span><span class="hl-0">;</span><br/><br/><span class="hl-5">const</span><span class="hl-0"> </span><span class="hl-6">result</span><span class="hl-0"> = </span><span class="hl-1">await</span><span class="hl-0"> </span><span class="hl-2">bladeSigner</span><span class="hl-0">.</span><span class="hl-4">call</span><span class="hl-0">( </span><span class="hl-5">new</span><span class="hl-0"> </span><span class="hl-4">TransactionReceiptQuery</span><span class="hl-0">({</span><span class="hl-2">transactionId:transactionId</span><span class="hl-0">}));</span>
 </code></pre>
 
 <a href="#license" id="license" style="color: inherit; text-decoration: none;">
