@@ -19,7 +19,7 @@ export enum HederaNetwork {
  * The interface exposed by the Extension for wallet interactions.
  */
 export type BladeExtensionInterface = {
-  createSession(network?: HederaNetwork): Promise<Signer>;
+  createSession(network?: HederaNetwork, dAppCode?: number): Promise<Signer>;
   killSession(): Promise<boolean>;
 
   get hasSession(): boolean;

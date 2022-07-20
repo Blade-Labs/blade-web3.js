@@ -105,10 +105,10 @@ export class BladeSigner implements Signer {
    * @returns Promise that resolves when a new session to the Blade Wallet
    * has succeeded.
    */
-  async createSession(network?: HederaNetwork): Promise<void> {
+  async createSession(network?: HederaNetwork, dAppCode?: number): Promise<void> {
     // store the blade extension here
     // the logic is that some methods on the Signer interface are sync
-    await this._getBladeExtension().createSession(network);
+    await this._getBladeExtension().createSession(network, dAppCode);
   }
 
   /**
