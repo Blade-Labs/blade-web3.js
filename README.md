@@ -12,7 +12,7 @@ A JavaScript/TypeScript library for development of DApps using Blade Wallet on H
 For example usage and testing the below APIs using a Demo App, please go here and setup the app locally:
 ### [Demo App - Local Setup](https://github.com/Blade-Labs/wallet-demo)
 
-The hosted version of the Demo App can be used to try out some API calls: 
+The hosted version of the Demo App can be used to try out some API calls:
 ### [Demo App - Hosted](https://blade-labs.github.io/wallet-demo/)
 
 # Getting Started
@@ -21,7 +21,7 @@ Blade Wallet uses the [Hedera Signature and Wallet Interface](https://hips.heder
 ## Installation
 This package is available as a [NPM package](https://www.npmjs.com/package/@bladelabs/blade-web3.js).
 
-```
+``` bash
 npm install @bladelabs/blade-web3.js
 ```
 
@@ -30,16 +30,22 @@ The `BladeSigner` class implements the Hashgraph Signer interface and allows acc
 
 To interact with the Blade Extension programmatically, instantiate a BladeSigner object and create a new session.
 
-```
+``` javascript
 import {BladeSigner} from 'blade-web3.js';
-
+import { HederaNetwork } from 'blade-web3.js/models/blade';
 
 initBlade();
 
 async function initBlade() {
 
     const bladeSigner = new BladeSigner();
-    await bladeSigner.createSession();
+    const params = {
+      network: HederaNetwork.Mainnet,
+      // dAppCode - optional while testing, request specific one by contacting us.
+      dAppCode: "yourAwesomeApp"
+    }
+    // create session with optional parameters.
+    await bladeSigner.createSession(params);
 
     // bladeSigner object can now be used.
     bladeSigner.getAccountId();
@@ -51,9 +57,10 @@ you can then communicate with the Extension using the BladeSigner object using t
 
 | API                                                        | Description                                                      |
 |:-----------------------------------------------------------| :--------------------------------------------------------------- |
+| `bladeSigner.createSession(params:SessionParams)`| Optional params. Create session with Blade extension.                                 |
 | `bladeSigner.getAccountId()`                               | Get accountId of active account.                                 |
-| `bladeSigner.getAccountBalance( accountId:AccountId\       |string)` |                                                                  |
-| `bladeSigner.getAccountInfo( accountId:AccountId\          |string)`    | Get information about a Hedera account on the connected network. |
+| `bladeSigner.getAccountBalance( accountId:AccountId⎮string)` |                                                               |
+| `bladeSigner.getAccountInfo( accountId:AccountId⎮string)`    | Get information about a Hedera account on the connected network. |
 | `bladeSigner.checkTransaction(transaction:Transaction)`    | Check that a transaction is valid.                               |
 | `bladeSigner.populateTransaction(transaction:Transaction)` | Set transaction id with active account.                          |
 | `bladeSigner.call(request:Executable)`                     | Sign and execute a transaction with provider account.            |
@@ -66,7 +73,7 @@ you can then communicate with the Extension using the BladeSigner object using t
 
 ### Executing a Transfer:
 
-```
+``` javascript
 import { TransferTransaction } from '@hashgraph/sdk';
 
  const amount = new BigNumber(5);
@@ -90,7 +97,7 @@ const result = await bladeSigner.call(transaction);
 ```
 
 ### Getting a transaction receipt:
-```
+``` javascript
 import { TransactionReceiptQuery } from '@hashgraph/sdk';
 
 const result = await bladeSigner.call( new TransactionReceiptQuery({transactionId:transactionId}));
