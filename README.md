@@ -31,25 +31,18 @@ The `BladeSigner` class implements the Hashgraph Signer interface and allows acc
 To interact with the Blade Extension programmatically, instantiate a BladeSigner object and create a new session.
 
 ``` javascript
-import {BladeSigner} from 'blade-web3.js';
-import { HederaNetwork } from 'blade-web3.js/models/blade';
+import {BladeSigner} from '@bladelabs/blade-web3.js';
+import { HederaNetwork } from '@bladelabs/blade-web3.js/lib/src/models/blade';
 
 initBlade();
 
 async function initBlade() {
-
     const bladeSigner = new BladeSigner();
-    const params = {
-      network: HederaNetwork.Mainnet,
-      // dAppCode - optional while testing, request specific one by contacting us.
-      dAppCode: "yourAwesomeApp"
-    }
     // create session with optional parameters.
-    await bladeSigner.createSession(params);
+    await bladeSigner.createSession(HederaNetwork.Mainnet);
 
     // bladeSigner object can now be used.
     bladeSigner.getAccountId();
-
 }
 ```
 
