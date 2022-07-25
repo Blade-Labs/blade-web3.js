@@ -32,7 +32,7 @@ To interact with the Blade Extension programmatically, instantiate a BladeSigner
 
 ``` javascript
 import {BladeSigner} from '@bladelabs/blade-web3.js';
-import { HederaNetwork } from '@bladelabs/blade-web3.js/lib/src/models/blade';
+import {HederaNetwork} from '@bladelabs/blade-web3.js/lib/src/models/blade';
 
 initBlade();
 
