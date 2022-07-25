@@ -25,21 +25,27 @@ This package is available as a [NPM package](https://www.npmjs.com/package/@blad
 npm install @bladelabs/blade-web3.js
 ```
 
+Minimum [Hashgraph SDK](https://github.com/hashgraph/hedera-sdk-js) version 2.16 is needed for connector  `npm i -S @hashgraph/sdk@^2.16`
+
 ## Usage
 The `BladeSigner` class implements the Hashgraph Signer interface and allows access to Blade Wallet operations.
 
 To interact with the Blade Extension programmatically, instantiate a BladeSigner object and create a new session.
 
 ``` javascript
-import {BladeSigner} from '@bladelabs/blade-web3.js';
-import {HederaNetwork} from '@bladelabs/blade-web3.js/lib/src/models/blade';
+import {BladeSigner, HederaNetwork} from '@bladelabs/blade-web3.js';
 
 initBlade();
 
 async function initBlade() {
     const bladeSigner = new BladeSigner();
+    const params = {
+      network: HederaNetwork.Mainnet,
+      // dAppCode - optional while testing, request specific one by contacting us.
+      dAppCode: "yourAwesomeApp"
+    }
     // create session with optional parameters.
-    await bladeSigner.createSession(HederaNetwork.Mainnet);
+    await bladeSigner.createSession(params);
 
     // bladeSigner object can now be used.
     bladeSigner.getAccountId();
