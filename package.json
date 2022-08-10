@@ -16,8 +16,16 @@
     "url": "https://github.com/Blade-Labs/blade-web3.js"
   },
   "license": "Apache-2.0",
+  "dependencies": {
+    "@walletconnect/sign-client": "^2.0.0-rc.1",
+    "@walletconnect/types": "^2.0.0-rc.1",
+    "@walletconnect/utils": "^2.0.0-rc.1",
+    "@walletconnect/qrcode-modal": "^2.0.0-alpha.20",
+    "@hashgraph/sdk": "^2.17.1",
+    "events": "^3.3.0",
+    "buffer": "^6.0.3"
+  },
   "devDependencies": {
-    "@hashgraph/sdk": "^2.16.0",
     "prettier": "^2.6.2",
     "tslint": "^6.1.3",
     "tslint-config-prettier": "^1.18.0",
