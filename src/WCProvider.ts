@@ -1,17 +1,18 @@
 import { SessionTypes } from "@walletconnect/types";
-import { getChainByLedgerId, isEncodable, isTransaction, MIRROR_NODES } from "./WCHederaUtils";
+import { getChainByLedgerId, isEncodable, isTransaction } from "./WCHederaUtils";
 import {
-  AccountBalance, AccountBalanceQuery,
+  AccountBalance,
   AccountId,
-  AccountInfo, AccountInfoQuery,
+  AccountInfo,
   Executable,
   LedgerId,
   Provider, SignerSignature, Transaction, TransactionId, TransactionReceipt, TransactionReceiptQuery,
-  TransactionRecord
+  TransactionRecord,
+  Client as HederaClient,
+  TransactionResponse
 } from "@hashgraph/sdk";
 import Client from "@walletconnect/sign-client";
 import { Buffer } from "buffer";
-export type TransactionResponse = import("@hashgraph/sdk/lib/transaction/TransactionResponse.js").default;
 
 export default class WCProvider implements Provider {
   private readonly client: Client;
@@ -30,32 +31,48 @@ export default class WCProvider implements Provider {
     if (!isEncodable(request)) {
       throw new Error("Argument is not executable");
     }
-    const result = await this.client.request<OutputT>({
+    const isTransactionType = isTransaction(request);
+    const result = await this.client.request<any>({
       topic: this.topic,
       request: {
         method: "call",
         params: {
-          accountId: this.accountId,
-          chainId: this.ledgerId,
-          executable: Buffer.from(request.toBytes()).toString("hex"),
-          isTransaction: isTransaction(request)
+          accountId: this.accountId.toString(),
+          executable: Buffer.from(request.toBytes()).toString("base64"),
+          isTransaction: isTransactionType
         }
       },
       chainId: getChainByLedgerId(this.ledgerId)
     })
-    return Promise.resolve(result);
+
+    if (result.error) {
+      throw new Error(result.error);
+    }
+
+    if (!isTransactionType) {
+      const responseTypeName = request.constructor.name.replace(/Query$/, "");
+      const output = await import("@hashgraph/sdk").then((module: any) => module[responseTypeName]);
+      const bytes = Buffer.from(result, "base64");
+      return output.fromBytes(bytes);
+    } else {
+      return TransactionResponse.fromJSON(result) as unknown as OutputT;
+    }
   }
 
   async signTransaction<T extends Transaction>(transaction: T) {
-    const result = await this.client.request<T>({
+    const encodedTransaction = await this.client.request<string>({
       topic: this.topic,
       request: {
         method: "signTransaction",
-        params: Buffer.from(transaction.toBytes()).toString("hex")
+        params: {
+          accountId: this.accountId.toString(),
+          executable: Buffer.from(transaction.toBytes()).toString("base64")
+        }
       },
       chainId: getChainByLedgerId(this.ledgerId)
-    })
-    return Promise.resolve(result);
+    });
+
+    return Transaction.fromBytes(Buffer.from(encodedTransaction, "base64")) as T;
   }
 
   async sign(messages: Uint8Array[]): Promise<SignerSignature[]> {
@@ -63,7 +80,10 @@ export default class WCProvider implements Provider {
       topic: this.topic,
       request: {
         method: "sign",
-        params: messages.toString()
+        params: {
+          accountId: this.accountId.toString(),
+          messages: messages.map(message => Buffer.from(message).toString("base64"))
+        }
       },
       chainId: getChainByLedgerId(this.ledgerId)
     })
@@ -79,26 +99,45 @@ export default class WCProvider implements Provider {
   }
 
   getMirrorNetwork(): string[] {
-    return MIRROR_NODES[this.ledgerId.toString()];
+    // return MIRROR_NODES[this.ledgerId.toString()];
+    const client = HederaClient.forName(this.ledgerId.toString());
+    return client.mirrorNetwork;
   }
 
-  getTransactionReceipt(transactionId: TransactionId | string): Promise<TransactionReceipt> {
+  async getTransactionReceipt(transactionId: TransactionId | string): Promise<TransactionReceipt> {
     const receiptQuery = new TransactionReceiptQuery().setTransactionId(transactionId);
     return this.call(receiptQuery);
   }
 
-  getAccountBalance(accountId: AccountId | string): Promise<AccountBalance> {
-    const query = new AccountBalanceQuery().setAccountId(accountId);
-    return this.call(query);
+  getAccountBalance(): Promise<AccountBalance> {
+    return this.client.request<AccountBalance>({
+      topic: this.topic,
+      request: {
+        method: "getAccountBalance",
+        params: {
+          accountId: this.accountId.toString()
+        }
+      },
+      chainId: getChainByLedgerId(this.ledgerId)
+    });
   }
 
-  getAccountInfo(accountId: AccountId | string): Promise<AccountInfo> {
-    const query = new AccountInfoQuery().setAccountId(accountId);
-    return this.call(query);
+  getAccountInfo(): Promise<AccountInfo> {
+    return this.client.request<AccountInfo>({
+      topic: this.topic,
+      request: {
+        method: "getAccountInfo",
+        params: {
+          accountId: this.accountId.toString()
+        }
+      },
+      chainId: getChainByLedgerId(this.ledgerId)
+    });
   }
 
   getNetwork(): { [p: string]: string | AccountId } {
-    return {};
+    const client = HederaClient.forName(this.ledgerId.toString());
+    return client.network;
   }
 
   waitForReceipt(response: TransactionResponse): Promise<TransactionReceipt> {

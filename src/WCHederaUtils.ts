@@ -2,9 +2,9 @@ import { LedgerId, Transaction } from "@hashgraph/sdk";
 import {ProposalTypes} from "@walletconnect/types";
 
 const chainsMap = new Map();
-chainsMap.set(LedgerId.MAINNET, 295);
-chainsMap.set(LedgerId.TESTNET, 296);
-chainsMap.set(LedgerId.PREVIEWNET, 297);
+chainsMap.set(LedgerId.MAINNET.toString(), 295);
+chainsMap.set(LedgerId.TESTNET.toString(), 296);
+chainsMap.set(LedgerId.PREVIEWNET.toString(), 297);
 
 export const MIRROR_NODES = {
   [LedgerId.MAINNET.toString()]: ["https://mainnet-public.mirrornode.hedera.com"],
@@ -15,6 +15,8 @@ export const MIRROR_NODES = {
 export enum METHODS {
   SIGN_TRANSACTION = "signTransaction",
   CALL = "call",
+  GET_ACCOUNT_BALANCE = "getAccountBalance",
+  GET_ACCOUNT_INFO = "getAccountInfo"
 }
 
 export enum EVENTS {
@@ -22,7 +24,7 @@ export enum EVENTS {
 }
 
 export const getChainByLedgerId = (ledgerId: LedgerId): string => {
-  return `hedera:${chainsMap.get(ledgerId)}`;
+  return `hedera:${chainsMap.get(ledgerId.toString())}`;
 }
 
 export const getRequiredNamespaces = (ledgerId: LedgerId): ProposalTypes.RequiredNamespaces => {

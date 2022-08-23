@@ -2,10 +2,8 @@ import WCProvider from "./WCProvider";
 import type {Signer,} from '@hashgraph/sdk';
 import {
   AccountBalance,
-  AccountBalanceQuery,
   AccountId,
   AccountInfo,
-  AccountInfoQuery,
   AccountRecordsQuery,
   Executable,
   Key,
@@ -57,13 +55,11 @@ export class BladeWCSigner implements Signer {
   }
 
   getAccountBalance(): Promise<AccountBalance> {
-    return this.call(
-      new AccountBalanceQuery().setAccountId(this.accountId)
-    );
+    return this.provider.getAccountBalance();
   }
 
   getAccountInfo(): Promise<AccountInfo> {
-    return this.call(new AccountInfoQuery().setAccountId(this.accountId));
+    return this.provider.getAccountInfo();
   }
 
   getAccountRecords(): Promise<TransactionRecord[]> {
@@ -126,12 +122,6 @@ export class BladeWCSigner implements Signer {
   }
 
   call<RequestT, ResponseT, OutputT>(request: Executable<RequestT, ResponseT, OutputT>): Promise<OutputT> {
-    if (this.provider == null) {
-      throw new Error(
-        "cannot send request with an wallet that doesn't contain a provider"
-      );
-    }
-
     return this.provider.call(request);
   }
 }
