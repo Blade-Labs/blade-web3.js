@@ -16,6 +16,9 @@
     "url": "https://github.com/Blade-Labs/blade-web3.js"
   },
   "license": "Apache-2.0",
+  "dependencies": {
+    "rxjs": "^7.5.7"
+  },
   "devDependencies": {
     "@hashgraph/sdk": "^2.16.0",
     "prettier": "^2.6.2",

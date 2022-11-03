@@ -1,25 +1,25 @@
 import type {
-  AccountId,
   AccountBalance,
+  AccountId,
   AccountInfo,
-  LedgerId,
-  Transaction,
   Executable,
-  SignerSignature,
-  TransactionRecord,
+  LedgerId,
   Signer,
-} from '@hashgraph/sdk';
+  SignerSignature,
+  Transaction,
+  TransactionRecord
+} from "@hashgraph/sdk";
+import { defer, first, Observable, ObservableInput, repeat, takeWhile } from "rxjs";
 
 import {
   BladeExtensionInterface,
+  SessionParams,
   WalletLoadedEvent,
-  WalletUpdatedEvent,
   WalletLockedEvent,
-  HederaNetwork,
-  SessionParams
-} from './models/blade';
+  WalletUpdatedEvent
+} from "./models/blade";
 
-import { noExtensionError, noSessionError } from './models/errors';
+import { noExtensionError, noSessionError } from "./models/errors";
 
 /**
  * Implements Hedera Signer interface.
@@ -36,29 +36,45 @@ export class BladeSigner implements Signer {
   private _onWalletLocked?: () => void;
 
   /** @hidden */
-  private _bladeExtension?: BladeExtensionInterface = window.bladeConnect;
+  private _activeWallet: Signer | null = null;
 
   /** @hidden */
-  private _getBladeExtension(): BladeExtensionInterface {
-    this._bladeExtension = window.bladeConnect;
+  private _pollInterface(): Observable<BladeExtensionInterface | undefined> {
+    return defer<ObservableInput<BladeExtensionInterface | undefined>>(
+      () => new Promise((resolve) =>
+        resolve(window.bladeConnect)
+      )
+    ).pipe(
+      repeat({ count: 50, delay: 200 }),
+      takeWhile(value => !value, true),
+      first(value => !!value, undefined)
+    );
+  }
 
-    if (this._bladeExtension == null) {
-      // use of method on BladeSigner before using createSession
-      throw noExtensionError();
+  /** @hidden */
+  private async _getBladeExtension(): Promise<BladeExtensionInterface> {
+    const extensionInterface = window.bladeConnect;
+
+    if (extensionInterface) {
+      return extensionInterface;
     }
 
-    return this._bladeExtension;
+    return new Promise((resolve, reject) => {
+      this._pollInterface().subscribe(extInterface => {
+        if (!extInterface) {
+          // use of method on BladeSigner before using createSession
+          reject(noExtensionError());
+          return;
+        }
+
+        resolve(extInterface);
+      });
+    });
   }
 
   constructor() {
     document.addEventListener(WalletLoadedEvent, async () => {
-      const blade = window.bladeConnect;
-
-      if (blade == null) {
-        throw new Error("(BUG) unexpected hederaWalletLoaded received but window.bladeConnect is null");
-      }
-
-      this._bladeExtension = blade;
+      this._activeWallet = (await this._getBladeExtension()).getActiveWallet();
     });
 
     document.addEventListener(WalletUpdatedEvent, async () => {
@@ -88,14 +104,14 @@ export class BladeSigner implements Signer {
    * @returns Network map currently in use by Blade Wallet.
    */
   getNetwork() {
-    return this._getBladeExtension().getActiveWallet()!.getNetwork();
+    return this._activeWallet?.getNetwork() || {};
   }
 
   /**
    * @returns Array of Hedera mirror network nodes.
    */
   getMirrorNetwork() {
-    return this._getBladeExtension().getActiveWallet()!.getMirrorNetwork();
+    return this._activeWallet?.getMirrorNetwork() || [];
   }
 
   /**
@@ -109,35 +125,37 @@ export class BladeSigner implements Signer {
   async createSession(params?: SessionParams): Promise<void> {
     // store the blade extension here
     // the logic is that some methods on the Signer interface are sync
-    await this._getBladeExtension().createSession(params?.network, params?.dAppCode);
+    this._activeWallet = await (await this._getBladeExtension()).createSession(params?.network, params?.dAppCode);
   }
 
   /**
    * Kills a session with the Blade Wallet Extension.
    */
   async killSession(): Promise<boolean> {
-    return this._getBladeExtension().killSession();
+    return (await this._getBladeExtension()).killSession();
   }
 
   /**
    * @hidden
    */
-  private _getActiveWallet() {
-    const wallet = this._getBladeExtension().getActiveWallet();
+  private async _getActiveWallet(): Promise<Signer> {
+    const wallet = (await this._getBladeExtension()).getActiveWallet();
+    this._activeWallet = wallet;
 
     if (wallet == null) {
       throw noSessionError();
     }
 
-    return wallet;
+    return this._activeWallet!;
   }
+
 
   /**
    * @param messages Array of messages to sign.
    * @returns Promise that resolves to array of Signed messages.
    */
   async sign(messages: Uint8Array[]): Promise<SignerSignature[]> {
-    return this._getActiveWallet().sign(messages);
+    return (await this._getActiveWallet()).sign(messages);
   }
 
   /**
@@ -146,11 +164,11 @@ export class BladeSigner implements Signer {
    * @returns A promise that resolves to the transaction with the signature appended.
    */
   async signTransaction<T extends  Transaction>(transaction: T): Promise<T> {
-    return this._getActiveWallet().signTransaction(transaction);
+    return (await this._getActiveWallet()).signTransaction(transaction);
   }
 
   async call<RequestT, ResponseT, OutputT>(request: Executable<RequestT, ResponseT, OutputT>): Promise<OutputT> {
-    return this._getActiveWallet().call(request);
+    return (await this._getActiveWallet()).call(request);
   }
 
   /**
@@ -163,7 +181,7 @@ export class BladeSigner implements Signer {
    * @returns Promise that resolves to Transaction with correct transaction ID.
    */
   async checkTransaction<T extends Transaction>(transaction: T): Promise<T> {
-    return this._getActiveWallet().checkTransaction(transaction);
+    return (await this._getActiveWallet()).checkTransaction(transaction);
   }
 
   /**
@@ -171,41 +189,45 @@ export class BladeSigner implements Signer {
    * @param transaction
    */
   async populateTransaction<T extends Transaction>(transaction: T): Promise<T> {
-    return this._getActiveWallet().populateTransaction(transaction);
+    return (await this._getActiveWallet()).populateTransaction(transaction);
   }
 
   /**
    * @returns LedgerId of network currently being used by Blade Wallet.
    */
-  getLedgerId(): LedgerId {
-    return this._getActiveWallet().getLedgerId()!;
+  getLedgerId(): LedgerId | null {
+    return this._activeWallet?.getLedgerId() || null;
   }
 
   /**
    * @returns AccountId of wallet of active account.
    */
   getAccountId(): AccountId {
-    return this._getActiveWallet().getAccountId();
+    if (!this._activeWallet) {
+      throw noSessionError();
+    }
+
+    return this._activeWallet.getAccountId();
   }
 
   /**
    * @returns Promise that resolves to account balance of active account.
    */
   async getAccountBalance(): Promise<AccountBalance> {
-    return this._getActiveWallet().getAccountBalance();
+    return (await this._getActiveWallet()).getAccountBalance();
   }
 
   /**
    * @returns Promise that resolves to AccountInfo of the account currently active.
    */
   async getAccountInfo(): Promise<AccountInfo> {
-    return this._getActiveWallet().getAccountInfo();
+    return (await this._getActiveWallet()).getAccountInfo();
   }
 
   /**
    * @returns Promise that resolves to array of records of recent account transactions.
    */
   async getAccountRecords(): Promise<TransactionRecord[]> {
-    return this._getActiveWallet().getAccountRecords();
+    return (await this._getActiveWallet()).getAccountRecords();
   }
 }
