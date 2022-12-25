@@ -17,7 +17,7 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "rxjs": "^7.5.7"
+    "rxjs": "^7.6.0"
   },
   "devDependencies": {
     "@hashgraph/sdk": "^2.16.0",
