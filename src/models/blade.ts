@@ -1,4 +1,5 @@
 import type { Signer, Wallet } from '@hashgraph/sdk';
+import {PairingTypes} from "@walletconnect/types";
 
 declare global {
   interface Window {
@@ -32,5 +33,5 @@ export type BladeExtensionInterface = {
 
   addAccount(network: HederaNetwork | null, id: string, privateKey: string, metadata: string | null): Promise<Signer>;
 
-  pairWC?(url: string): Promise<void>;
+  pairWC?(url: string): Promise<PairingTypes.Struct>;
 };
