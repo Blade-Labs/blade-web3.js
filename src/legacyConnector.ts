@@ -140,6 +140,6 @@ export class LegacyConnector implements IConnector  {
     }
 
     get initialized(): boolean {
-        return Boolean(this._activeWallet);
+        return true;
     }
 }
