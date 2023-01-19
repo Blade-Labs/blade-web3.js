@@ -64,9 +64,9 @@ export class BladeSigner implements IConnector {
         });
     }
 
-    async createSession(params?: SessionParams): Promise<void> {
+    async createSession(params?: SessionParams): Promise<string[]> {
         await waitForConnector(this.isInitialized);
-        await this.connector.createSession(params);
+        return this.connector.createSession(params);
     }
 
     async killSession(): Promise<void> {

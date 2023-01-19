@@ -5,7 +5,7 @@ export interface IConnector extends Signer {
     initialized: boolean;
     onWalletLocked(callback: () => void): void;
     onAccountChanged(callback: () => void): void;
-    createSession(params?: SessionParams): Promise<void>;
+    createSession(params?: SessionParams): Promise<string[]>;
     killSession(): Promise<void>;
     selectAccount(accountId?: string): Promise<Signer>
 }

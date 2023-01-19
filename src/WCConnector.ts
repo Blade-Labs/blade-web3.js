@@ -21,6 +21,7 @@ import {
 } from "@hashgraph/sdk";
 import {IConnector, WalletEvent} from "./models/interfaces";
 import {filter, Subscription} from "rxjs";
+import {getAccountIDsFromSigners} from "./helpers/interfaceHelpers";
 
 export class WCConnector implements IConnector {
     protected activeSigner: Signer | null = null;
@@ -50,11 +51,16 @@ export class WCConnector implements IConnector {
         this.subscriptions.push(updatedSub);
     }
 
-    async createSession(params?: SessionParams): Promise<void> {
-        const networkName = (params?.network || HederaNetwork.Mainnet).toLowerCase();
-        await this.dAppConnector.connect(LedgerId.fromString(networkName))
-        this.signers = this.dAppConnector.getSigners();
-        this.activeSigner = this.signers[0] || null;
+    async createSession(params?: SessionParams): Promise<string[]> {
+        try {
+            const networkName = (params?.network || HederaNetwork.Mainnet).toLowerCase();
+            await this.dAppConnector.connect(LedgerId.fromString(networkName))
+            this.signers = this.dAppConnector.getSigners();
+            this.activeSigner = this.signers[0] || null;
+            return getAccountIDsFromSigners(this.signers);
+        } catch (e) {
+            throw e;
+        }
     }
 
     async killSession(): Promise<void> {
@@ -147,7 +153,7 @@ export class WCConnector implements IConnector {
     }
 
     async selectAccount(accountId?: string): Promise<Signer> {
-        const account = this.signers.find(s => s.getAccountId.toString() === accountId);
+        const account = this.signers.find(s => s.getAccountId().toString() === accountId);
         if (!this.activeSigner || !account && accountId) {
             throw noSessionError();
         }

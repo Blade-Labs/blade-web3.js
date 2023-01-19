@@ -12,8 +12,8 @@ export const WalletUpdatedEvent = 'hederaWalletUpdated';
 export const WalletLockedEvent = 'hederaWalletLocked';
 
 export enum HederaNetwork {
-  Mainnet = 'Mainnet',
-  Testnet = 'Testnet',
+  Mainnet = 'mainnet',
+  Testnet = 'testnet',
 }
 
 export type SessionParams = {

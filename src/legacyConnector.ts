@@ -58,10 +58,15 @@ export class LegacyConnector implements IConnector  {
         return this._activeWallet?.getMirrorNetwork() || [];
     }
 
-    async createSession(params?: SessionParams): Promise<void> {
+    async createSession(params?: SessionParams): Promise<string[]> {
         // store the blade extension here
         // the logic is that some methods on the Signer interface are sync
         this._activeWallet = await (await getBladeExtension())?.createSession(params?.network, params?.dAppCode) || null;
+        const availableAccounts = []
+        if (this._activeWallet) {
+            availableAccounts.push(this._activeWallet.getAccountId().toString());
+        }
+        return availableAccounts;
     }
 
     async killSession(): Promise<void> {
