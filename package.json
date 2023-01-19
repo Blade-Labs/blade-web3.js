@@ -18,7 +18,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "rxjs": "^7.5.7",
-    "@bladelabs/hedera-wallet-connect": "file:../hedera-wallet-connect/bladelabs-hedera-wallet-connect-0.1.0.tgz"
+    "@bladelabs/hedera-wallet-connect": "file:./bladelabs-hedera-wallet-connect-0.1.0.tgz"
   },
   "devDependencies": {
     "@hashgraph/sdk": "^2.19.1",
