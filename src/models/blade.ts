@@ -1,4 +1,5 @@
 import type { Signer, Wallet } from '@hashgraph/sdk';
+import {PairingTypes} from "@walletconnect/types";
 
 declare global {
   interface Window {
@@ -11,8 +12,8 @@ export const WalletUpdatedEvent = 'hederaWalletUpdated';
 export const WalletLockedEvent = 'hederaWalletLocked';
 
 export enum HederaNetwork {
-  Mainnet = 'Mainnet',
-  Testnet = 'Testnet',
+  Mainnet = 'mainnet',
+  Testnet = 'testnet',
 }
 
 export type SessionParams = {
@@ -31,4 +32,6 @@ export type BladeExtensionInterface = {
   getActiveWallet(): Wallet | null;
 
   addAccount(network: HederaNetwork | null, id: string, privateKey: string, metadata: string | null): Promise<Signer>;
+
+  pairWC?(url: string): Promise<PairingTypes.Struct>;
 };
