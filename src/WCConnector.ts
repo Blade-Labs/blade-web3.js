@@ -3,6 +3,7 @@ import {DAppConnector, DAppMetadata} from "@bladelabs/hedera-wallet-connect";
 
 import {
     HederaNetwork,
+    KeyPairSignOptions,
     SessionParams,
     WalletLoadedEvent,
     WalletLockedEvent,
@@ -19,13 +20,13 @@ import {
     Transaction,
     TransactionRecord
 } from "@hashgraph/sdk";
-import {IConnector, WalletEvent} from "./models/interfaces";
+import {ExtendedSigner, IConnector, WalletEvent} from "./models/interfaces";
 import {filter, Subscription} from "rxjs";
-import {getAccountIDsFromSigners} from "./helpers/interfaceHelpers";
+import {getAccountIDsFromSigners} from "./helpers/utils";
 
 export class WCConnector implements IConnector {
-    protected activeSigner: Signer | null = null;
-    protected signers: Signer[] = [];
+    protected activeSigner: ExtendedSigner | null = null;
+    protected signers: ExtendedSigner[] = [];
     protected dAppConnector: DAppConnector;
     private subscriptions: Subscription[] = [];
 
@@ -138,18 +139,18 @@ export class WCConnector implements IConnector {
         return this.activeSigner.populateTransaction<T>(transaction);
     }
 
-    sign(messages: Uint8Array[]): Promise<SignerSignature[]> {
-        if (!this.activeSigner) {
-            throw noSessionError();
-        }
-        return this.activeSigner.sign(messages);
-    }
-
     signTransaction<T extends Transaction>(transaction: T): Promise<T> {
         if (!this.activeSigner) {
             throw noSessionError();
         }
         return this.activeSigner.signTransaction<T>(transaction);
+    }
+
+    sign(messages: Uint8Array[], signOptions?: KeyPairSignOptions): Promise<SignerSignature[]> {
+        if (!this.activeSigner) {
+            throw noSessionError();
+        }
+        return this.activeSigner.sign(messages, signOptions);
     }
 
     async selectAccount(accountId?: string): Promise<Signer> {
