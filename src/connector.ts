@@ -41,7 +41,7 @@ export class BladeSigner implements IConnector {
             return;
         });
     }
-    
+
     private isInitialized = async (): Promise<boolean> => {
         return Boolean(this.connector?.initialized);
     }
@@ -82,9 +82,12 @@ export class BladeSigner implements IConnector {
         return this.connector?.getMirrorNetwork() || [];
     }
 
-    async sign(messages: Uint8Array[]): Promise<SignerSignature[]> {
+    async sign(
+      messages: Uint8Array[],
+      signOptions?: {canonical: boolean, likeHethers: boolean}
+    ): Promise<SignerSignature[]> {
         await waitForConnector(this.isInitialized);
-        return this.connector.sign(messages);
+        return this.connector.sign(messages, signOptions);
     }
 
     async signTransaction<T extends  Transaction>(transaction: T): Promise<T> {

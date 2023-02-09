@@ -21,6 +21,11 @@ export type SessionParams = {
   dAppCode?: string
 }
 
+export type KeyPairSignOptions = {
+  canonical?: boolean,
+  withHethers?: boolean
+}
+
 /**
  * The interface exposed by the Extension for wallet interactions.
  */

@@ -1,7 +1,8 @@
 import {WCConnector} from "./WCConnector";
 import {HederaNetwork, SessionParams} from "./models/blade";
 import {LedgerId} from "@hashgraph/sdk";
-import {getAccountIDsFromSigners, getBladeExtension} from "./helpers/interfaceHelpers";
+import {getBladeExtension} from "./helpers/interfaceHelpers";
+import {getAccountIDsFromSigners} from "./helpers/utils";
 import {DAppMetadata} from "@bladelabs/hedera-wallet-connect";
 import {SessionTypes} from "@walletconnect/types";
 

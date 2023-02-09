@@ -1,7 +1,6 @@
 import {defer, first, lastValueFrom, Observable, ObservableInput, repeat, takeWhile} from "rxjs";
 import {BladeExtensionInterface} from "../models/blade";
 import {noExtensionError} from "../models/errors";
-import {Signer} from "@hashgraph/sdk";
 
 function pollExtensionInterface(): Observable<BladeExtensionInterface | undefined> {
     return defer<ObservableInput<BladeExtensionInterface | undefined>>(
@@ -53,8 +52,4 @@ export async function waitForConnector(checkFn: () => Promise<boolean>): Promise
                 first(value => !!value)
             )
     );
-}
-
-export function getAccountIDsFromSigners(signers: Signer[]): string[]  {
-    return signers.map(s => s.getAccountId().toString())
 }
