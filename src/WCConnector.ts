@@ -1,5 +1,5 @@
 import type {Executable, Signer} from "@hashgraph/sdk";
-import {DAppConnector, DAppMetadata} from "@bladelabs/hedera-wallet-connect";
+import {DAppConnector, DAppMetadata} from "@hashgraph/hedera-wallet-connect";
 
 import {
     HederaNetwork,
