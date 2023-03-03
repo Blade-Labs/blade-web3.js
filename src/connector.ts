@@ -14,7 +14,7 @@ import type {
 import {SessionParams} from "./models/blade";
 
 import {WCConnector} from "./WCConnector";
-import {DAppMetadata} from "@bladelabs/hedera-wallet-connect";
+import {DAppMetadata} from "@hashgraph/hedera-wallet-connect";
 import {IConnector} from "./models/interfaces";
 import {LegacyConnector} from "./legacyConnector";
 import {getBladeExtension, waitForConnector} from "./helpers/interfaceHelpers";
