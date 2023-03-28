@@ -1,4 +1,8 @@
-# Blade Web3 JavaScript API
+---
+description: Web3 JavaScript API
+---
+
+# Blade Dapp Integration
 
 [![npm version](https://badge.fury.io/js/@bladelabs%2Fblade-web3.js.svg)](https://badge.fury.io/js/@bladelabs%2Fblade-web3.js)
 
