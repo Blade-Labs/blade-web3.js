@@ -11,6 +11,7 @@ import type {
 } from "@hashgraph/sdk";
 
 import {
+    KeyPairSignOptions,
     SessionParams,
     WalletLoadedEvent,
     WalletLockedEvent,
@@ -18,7 +19,7 @@ import {
 } from "./models/blade";
 
 import {noSessionError } from "./models/errors";
-import {IConnector} from "./models/interfaces";
+import {HandshakePayload, HandshakeResponse, IConnector} from "./models/interfaces";
 import {getBladeExtension} from "./helpers/interfaceHelpers";
 
 export class LegacyConnector implements IConnector  {
@@ -91,6 +92,16 @@ export class LegacyConnector implements IConnector  {
 
     async signTransaction<T extends  Transaction>(transaction: T): Promise<T> {
         return (await this._getActiveWallet()).signTransaction(transaction);
+    }
+
+    async handshake(
+        serverSigningAccount: string,
+        serverSignature: string,
+        payload: HandshakePayload,
+        signOptions?: KeyPairSignOptions
+    ): Promise<HandshakeResponse> {
+        // @ts-ignore
+        return (await this._getActiveWallet()).handshake(serverSigningAccount, serverSignature, payload, signOptions);
     }
 
     async call<RequestT, ResponseT, OutputT>(request: Executable<RequestT, ResponseT, OutputT>): Promise<OutputT> {

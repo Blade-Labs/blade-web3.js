@@ -20,7 +20,7 @@ import {
     Transaction,
     TransactionRecord
 } from "@hashgraph/sdk";
-import {ExtendedSigner, IConnector, WalletEvent} from "./models/interfaces";
+import {ExtendedSigner, HandshakePayload, HandshakeResponse, IConnector, WalletEvent} from "./models/interfaces";
 import {filter, Subscription} from "rxjs";
 import {getAccountIDsFromSigners} from "./helpers/utils";
 
@@ -32,7 +32,7 @@ export class WCConnector implements IConnector {
 
     constructor(meta?: DAppMetadata) {
         this.dAppConnector = new DAppConnector(meta);
-        this.dAppConnector.init([WalletLoadedEvent, WalletUpdatedEvent, WalletLockedEvent]);
+        this.dAppConnector.init([WalletLoadedEvent, WalletUpdatedEvent, WalletLockedEvent], ['handshake']);
     }
 
     /**
@@ -151,6 +151,18 @@ export class WCConnector implements IConnector {
             throw noSessionError();
         }
         return this.activeSigner.sign(messages, signOptions);
+    }
+
+    handshake(
+        serverSigningAccount: string,
+        serverSignature: string,
+        payload: HandshakePayload,
+        signOptions?: KeyPairSignOptions
+    ): Promise<HandshakeResponse> {
+        if (!this.activeSigner) {
+            throw noSessionError();
+        }
+        return this.activeSigner.handshake(serverSigningAccount, serverSignature, payload, signOptions);
     }
 
     async selectAccount(accountId?: string): Promise<Signer> {

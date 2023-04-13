@@ -15,7 +15,7 @@ import {SessionParams} from "./models/blade";
 
 import {WCConnector} from "./WCConnector";
 import {DAppMetadata} from "@hashgraph/hedera-wallet-connect";
-import {IConnector} from "./models/interfaces";
+import {HandshakePayload, HandshakeResponse, IConnector} from "./models/interfaces";
 import {LegacyConnector} from "./legacyConnector";
 import {getBladeExtension, waitForConnector} from "./helpers/interfaceHelpers";
 import {ExtensionConnector} from "./extensionConnector";
@@ -93,6 +93,16 @@ export class BladeSigner implements IConnector {
     async signTransaction<T extends  Transaction>(transaction: T): Promise<T> {
         await waitForConnector(this.isInitialized);
         return this.connector.signTransaction(transaction);
+    }
+
+    async handshake(
+        serverSigningAccount: string,
+        serverSignature: string,
+        payload: HandshakePayload,
+        signOptions?: {canonical: boolean, likeHethers: boolean}
+    ): Promise<HandshakeResponse> {
+        await waitForConnector(this.isInitialized);
+        return this.connector.handshake(serverSigningAccount, serverSignature, payload, signOptions);
     }
 
     async call<RequestT, ResponseT, OutputT>(request: Executable<RequestT, ResponseT, OutputT>): Promise<OutputT> {
