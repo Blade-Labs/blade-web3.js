@@ -94,14 +94,8 @@ export class LegacyConnector implements IConnector  {
         return (await this._getActiveWallet()).signTransaction(transaction);
     }
 
-    async handshake(
-        serverSigningAccount: string,
-        serverSignature: string,
-        payload: HandshakePayload,
-        signOptions?: KeyPairSignOptions
-    ): Promise<HandshakeResponse> {
-        // @ts-ignore
-        return (await this._getActiveWallet()).handshake(serverSigningAccount, serverSignature, payload, signOptions);
+    async handshake(): Promise<HandshakeResponse> {
+        throw new Error(`This method not implemented in LegacyConnector. Please use WCConnector instead.`);
     }
 
     async call<RequestT, ResponseT, OutputT>(request: Executable<RequestT, ResponseT, OutputT>): Promise<OutputT> {
