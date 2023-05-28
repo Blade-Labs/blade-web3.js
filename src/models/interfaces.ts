@@ -35,12 +35,15 @@ export interface HandshakePayload {
 }
 
 export interface HandshakeResponse {
-    signingAccount: string,
-    auth: {
-        signedPayload: {
-            serverSignature: Uint8Array,
-            originalPayload: HandshakePayload
-        },
-        userSignature: Uint8Array
+    originalPayload: HandshakePayload,
+    serverSignature: {
+        publicKey: string,
+        signature: string,
+        accountId: string
+    },
+    userSignature: {
+        publicKey: string,
+        signature: string,
+        accountId: string
     }
 }

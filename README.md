@@ -122,7 +122,7 @@ const handshakeResult = await bladeSigner.handshake(
 )
 
 const body = JSON.stringify(handshakeResult);
-// {"signingAccount":"0.0.8235","auth":{"signedPayload":{"serverSignature":"51c55348003676a1a753d5f10c31a42f16430784053a08e6368f79e666a7d6f053014e8e33f0fca808941f3c2be5975597815ab48d22868196e43fc443affcb9","originalPayload":{"url":"b344-178-137-139-12.ngrok-free.app","data":{"token":"fufhr9e84hf9w8fehw9e8fhwo9e8fw938fw3o98fhjw3of"}}},"userSignature":"fda3cee1956caa0b76e17bcd28f7a69161c55b0baa02f8abf6fb83baf9a3c51b4dd4f5978093073bc5b8ed1289661b4ca8b34081364827efab4d79e684955e1d"}}
+// {originalPayload: {"url":"b344-178-137-139-12.ngrok-free.app","data":{"token":"fufhr9e84hf9w8fehw9e8fhwo9e8fw938fw3o98fhjw3of"}},serverSignature: {publicKey: "7dca406e2ffa2cd473bdb5b7b0bb6283e6eac02cf41a604e701960d11c0953be",signature: "51c55348003676a1a753d5f10c31a42f16430784053a08e6368f79e666a7d6f053014e8e33f0fca808941f3c2be5975597815ab48d22868196e43fc443affcb9",accountId: "0.0.8281"},userSignature: {publicKey: "cce9430742d838b68fd286b280bee5a31b2b1249075270022d0c8d09893e6e67",signature: "fda3cee1956caa0b76e17bcd28f7a69161c55b0baa02f8abf6fb83baf9a3c51b4dd4f5978093073bc5b8ed1289661b4ca8b34081364827efab4d79e684955e1d",accountId: "0.0.8235"}}
 
 const { authMessage } = await fetch('http://localhost:8443/getAuth', {
     method: 'POST',
