@@ -43,6 +43,12 @@ export class BladeSigner implements IConnector {
     }
 
     private isInitialized = async (): Promise<boolean> => {
+        if (this.connector instanceof ExtensionConnector) {
+            const extensionInterface = await getBladeExtension();
+            if (extensionInterface && typeof extensionInterface.wake === "function") {
+                return await extensionInterface.wake() && Boolean(this.connector?.initialized);
+            }
+        }
         return Boolean(this.connector?.initialized);
     }
 
