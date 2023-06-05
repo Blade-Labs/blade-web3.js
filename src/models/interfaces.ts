@@ -15,9 +15,35 @@ export interface ExtendedSigner extends Signer {
     sign(messages: Uint8Array[],
          signOptions?: KeyPairSignOptions
     ): Promise<SignerSignature[]>
+
+    handshake(
+        serverSigningAccount: string,
+        serverSignature: string,
+        payload: HandshakePayload,
+        signOptions?: KeyPairSignOptions
+    ): Promise<HandshakeResponse>;
 }
 
 export type WalletEvent = {
     name: string,
     data: any
+}
+
+export interface HandshakePayload {
+    url: string,
+    data: any
+}
+
+export interface HandshakeResponse {
+    originalPayload: HandshakePayload,
+    serverSignature: {
+        publicKey: string,
+        signature: string,
+        accountId: string
+    },
+    userSignature: {
+        publicKey: string,
+        signature: string,
+        accountId: string
+    }
 }
