@@ -1,20 +1,24 @@
-import {WCConnector} from "./WCConnector";
+import {WCConnector} from "./wc-connector";
 import {HederaNetwork, SessionParams} from "./models/blade";
 import {LedgerId} from "@hashgraph/sdk";
-import {getBladeExtension} from "./helpers/interfaceHelpers";
+import {getBladeExtension} from "./helpers/interface-helpers";
 import {getAccountIDsFromSigners} from "./helpers/utils";
 import {DAppMetadata} from "@hashgraph/hedera-wallet-connect";
 import {SessionTypes} from "@walletconnect/types";
 
 export class ExtensionConnector extends WCConnector {
+
     constructor(meta?: DAppMetadata) {
         super(meta);
     }
-    async createSession(params?: SessionParams): Promise<string[]> {
+
+    public async createSession(params?: SessionParams): Promise<string[]> {
         const extension = await getBladeExtension();
+
         if (extension) {
             const networkName = (params?.network || HederaNetwork.Mainnet).toLowerCase();
             const data = await this.dAppConnector.prepareConnectURI(LedgerId.fromString(networkName));
+
             if (data) {
                 await extension.pairWC!(data.uri!);
                 const session = await data.approval();
@@ -26,13 +30,15 @@ export class ExtensionConnector extends WCConnector {
                     await this.onSessionChange(existingSession);
                     return getAccountIDsFromSigners(this.signers);
                 }
+
                 return [];
             }
         }
+
         return [];
     }
 
-    private async onSessionChange(session: SessionTypes.Struct) {
+    private async onSessionChange(session: SessionTypes.Struct): Promise<void> {
         await this.dAppConnector.onSessionConnected(session);
         this.signers = this.dAppConnector.getSigners();
         this.activeSigner = this.signers[0] || null;
