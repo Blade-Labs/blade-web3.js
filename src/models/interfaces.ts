@@ -1,6 +1,6 @@
 import {Signer} from "@hashgraph/sdk";
 import {SignerSignature} from "@hashgraph/sdk/lib/Signer";
-import {KeyPairSignOptions, SessionParams} from "../models/blade";
+import {KeyPairSignOptions, SessionParams} from "@/models/blade";
 
 export interface IConnector extends ExtendedSigner {
     initialized: boolean;
