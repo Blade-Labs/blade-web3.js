@@ -205,9 +205,9 @@ To select another account, use `.selectAccount()` method.
 
 **Implementation example:**
 ```javascript
-const accountIds = await bladeSigner.createSession(/*...*/);
-// let's say, accountIds is ["0.0.12351", "0.0.446527"], thus "0.0.12351" is automatically selected
-bladeSigner.selectAccount(accountIds[1]);
+// let's say, user selected the following accounts for the session: ["0.0.12351", "0.0.446527"]
+// thus "0.0.12351" is automatically selected
+bladeSigner.selectAccount("0.0.446527");
 // now all the operations will be performed with the newly selected account
 ```
 
