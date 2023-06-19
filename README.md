@@ -62,10 +62,10 @@ To interact with the Blade Extension programmatically, instantiate a BladeSigner
 
 **Implementation example:**
 ```javascript
-import {BladeSigner} from '@bladelabs/blade-web3.js';
+import {BladeConnector} from '@bladelabs/blade-web3.js';
 
-// dApp metadata options are optional, but are highly recommended to use for Blade Wallet 0.19.0 or newer
-const bladeSigner = new BladeSigner({
+// dApp metadata options are optional, but are highly recommended to use
+const bladeConnector = new BladeConnector({
     name: "Awesome DApp",
     description: "DApp description",
     url: "https://awesome-dapp.io/",
@@ -90,7 +90,9 @@ const params = {
   dAppCode: "SomeAwesomeDApp" // optional while testing, request specific one by contacting us
 }
 
-const pairedAccountIds = await bladeSigner.createSession(params);
+const pairedAccountIds = await bladeConnector.createSession(params);
+// retrieving the currently active signer to perform all the Hedera operations
+const bladeSigner = await bladeConnector.getSigner();
 ```
 
 ### Disconnecting
@@ -98,7 +100,7 @@ To disconnect the session, call `.killSession()` method.
 
 **Implementation example:**
 ```javascript
-await bladeSigner.killSession();
+await bladeConnector.killSession();
 ```
 
 ### Handshake
@@ -207,7 +209,7 @@ To select another account, use `.selectAccount()` method.
 ```javascript
 // let's say, user selected the following accounts for the session: ["0.0.12351", "0.0.446527"]
 // thus "0.0.12351" is automatically selected
-bladeSigner.selectAccount("0.0.446527");
+bladeConnector.selectAccount("0.0.446527");
 // now all the operations will be performed with the newly selected account
 ```
 
@@ -217,7 +219,7 @@ To get an active account ID, use `.getAccountId()` method.
 
 **Implementation example:**
 ```javascript
-const accountId = bladeSigner.getAccountId();
+const accountId = bladeConnector.getSigner().getAccountId();
 ```
 
 #### Get active account info
@@ -225,7 +227,7 @@ To get detailed info about currently active account, use `.getAccountInfo()` met
 
 **Implementation example:**
 ```javascript
-const accountInfo = bladeSigner.getAccountInfo();
+const accountInfo = bladeConnector.getSigner().getAccountInfo();
 ```
 
 #### Get active account balances
@@ -233,7 +235,7 @@ To get info about all the balances of the active account, use `.getAccountBalanc
 
 **Implementation example:**
 ```javascript
-const balances = bladeSigner.getAccountBalance();
+const balances = bladeConnector.getSigner().getAccountBalance();
 ```
 
 ### Transactions
@@ -246,6 +248,8 @@ but it is also possible to call the `.executeWithSigner()` on a transaction itse
 **First approach:**
 ```javascript
 import {TransferTransaction} from '@hashgraph/sdk';
+
+const bladeSigner = bladeConnector.getSigner();
 
 const amount = 5;
 
@@ -267,6 +271,8 @@ const result = await signedTransaction.executeWithSigner(bladeSigner);
 ```javascript
 import {TransferTransaction, AccountId} from '@hashgraph/sdk';
 
+const bladeSigner = bladeConnector.getSigner();
+
 const amount = 5;
 
 const transaction = await new TransferTransaction()
@@ -286,6 +292,8 @@ const result = await signedTransaction.executeWithSigner(bladeSigner);
 **Third approach:**
 ```javascript
 import {TransferTransaction} from '@hashgraph/sdk';
+
+const bladeSigner = bladeConnector.getSigner();
 
 const amount = 5;
 
@@ -310,7 +318,7 @@ import {TransactionReceiptQuery} from '@hashgraph/sdk';
 
 const transactionId = "some-tx-id";
 
-const result = await bladeSigner.call(new TransactionReceiptQuery({
+const result = await bladeConnector.getSigner().call(new TransactionReceiptQuery({
   transactionId
 }));
 ```
@@ -323,6 +331,8 @@ It checks if node accounts are valid for the current network, and if transaction
 ```javascript
 import {TransferTransaction} from '@hashgraph/sdk';
 
+let bladeSigner = bladeConnector.getSigner();
+
 const amount = 5;
 
 const transaction = await new TransferTransaction()
@@ -330,7 +340,7 @@ const transaction = await new TransferTransaction()
   .addHbarTransfer(bladeSigner.getAccountId(), -amount)
   .freezeWithSigner(bladeSigner);
 
-bladeSigner.selectAccount("0.0.1234567"); // selecting different account
+bladeSigner = bladeConnector.selectAccount("0.0.1234567"); // selecting different account
 
 try {
   await bladeSigner.checkTransaction(transaction); 
@@ -342,10 +352,17 @@ try {
 # API
 [Read the TypeDoc API documentation](https://blade-labs.github.io/blade-web3.js/)
 
+## BladeConnector
+| Method                                                 | Description                               |
+|:-------------------------------------------------------|:------------------------------------------|
+| `bladeConnector.createSession(params?: SessionParams)` | Create session with Blade Wallet.         |
+| `bladeConnector.killSession()`                         | Close the session with Blade Wallet.      |
+| `bladeConnector.getSigner()`                           | Get the currently active BladeSigner.     |
+| `bladeConnector.getSigners()`                          | Get a list of paired BladeSigner objects. |
+
+## BladeSigner
 | Method                                                                                               | Description                                                      |
 |:-----------------------------------------------------------------------------------------------------|:-----------------------------------------------------------------|
-| `bladeSigner.createSession(params?: SessionParams)`                                                  | Create session with Blade extension.                             |
-| `bladeSigner.killSession()`                                                                          | Close the session with Blade extension.                          |
 | `bladeSigner.getAccountId()`                                                                         | Get accountId of active account.                                 |
 | `bladeSigner.getAccountBalance(accountId: AccountId⎮string)`                                         | Retrieve account balance by accountId                            |
 | `bladeSigner.getAccountInfo(accountId: AccountId⎮string)`                                            | Get information about a Hedera account on the connected network. |
