@@ -97,6 +97,11 @@ export class BladeConnector implements IConnector {
      * @private
      */
     private async init(preferredStrategy?: ConnectorStrategy, meta?: DAppMetadata): Promise<void> {
+        if (preferredStrategy === ConnectorStrategy.WALLET_CONNECT) {
+            this.strategy = new WalletConnectStrategy(meta);
+            return;
+        }
+
         let extensionInterface: BladeExtensionInterface | undefined;
 
         try {
@@ -111,7 +116,7 @@ export class BladeConnector implements IConnector {
         }
 
         if (!this.strategy) {
-            this.strategy = new ExtensionStrategy(meta);
+            this.strategy = new WalletConnectStrategy(meta);
         }
     }
 }

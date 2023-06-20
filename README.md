@@ -219,7 +219,8 @@ To get an active account ID, use `.getAccountId()` method.
 
 **Implementation example:**
 ```javascript
-const accountId = bladeConnector.getSigner().getAccountId();
+const bladeSigner = bladeConnector.getSigner();
+const accountId = bladeSigner.getAccountId();
 ```
 
 #### Get active account info
@@ -227,7 +228,8 @@ To get detailed info about currently active account, use `.getAccountInfo()` met
 
 **Implementation example:**
 ```javascript
-const accountInfo = bladeConnector.getSigner().getAccountInfo();
+const bladeSigner = bladeConnector.getSigner();
+const accountInfo = bladeSigner.getAccountInfo();
 ```
 
 #### Get active account balances
@@ -235,7 +237,8 @@ To get info about all the balances of the active account, use `.getAccountBalanc
 
 **Implementation example:**
 ```javascript
-const balances = bladeConnector.getSigner().getAccountBalance();
+const bladeSigner = bladeConnector.getSigner();
+const balances = bladeSigner.getAccountBalance();
 ```
 
 ### Transactions
@@ -318,7 +321,8 @@ import {TransactionReceiptQuery} from '@hashgraph/sdk';
 
 const transactionId = "some-tx-id";
 
-const result = await bladeConnector.getSigner().call(new TransactionReceiptQuery({
+const bladeSigner = bladeConnector.getSigner();
+const result = await bladeSigner.call(new TransactionReceiptQuery({
   transactionId
 }));
 ```
