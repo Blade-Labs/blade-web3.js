@@ -1,4 +1,3 @@
-import type { Signer, Wallet } from '@hashgraph/sdk';
 import {PairingTypes} from "@walletconnect/types";
 
 declare global {
@@ -7,8 +6,8 @@ declare global {
   }
 }
 
-export const WalletLockedEvent = 'hederaWalletLocked';
-export const WalletUnlockedEvent = 'hederaWalletUnlocked';
+export const WalletLockedEvent = 'walletLocked';
+export const WalletUnlockedEvent = 'walletUnlocked';
 
 export enum HederaNetwork {
   Mainnet = 'mainnet',
