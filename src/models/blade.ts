@@ -7,9 +7,8 @@ declare global {
   }
 }
 
-export const WalletLoadedEvent = 'hederaWalletLoaded';
-export const WalletUpdatedEvent = 'hederaWalletUpdated';
 export const WalletLockedEvent = 'hederaWalletLocked';
+export const WalletUnlockedEvent = 'hederaWalletUnlocked';
 
 export enum HederaNetwork {
   Mainnet = 'mainnet',
@@ -30,13 +29,5 @@ export type KeyPairSignOptions = {
  * The interface exposed by the Extension for wallet interactions.
  */
 export type BladeExtensionInterface = {
-  createSession(network?: HederaNetwork, dAppCode?: string): Promise<Signer>;
-  killSession(): Promise<boolean>;
-
-  get hasSession(): boolean;
-  getActiveWallet(): Wallet | null;
-
-  addAccount(network: HederaNetwork | null, id: string, privateKey: string, metadata: string | null): Promise<Signer>;
-
   pairWC?(url: string): Promise<PairingTypes.Struct>;
 };
