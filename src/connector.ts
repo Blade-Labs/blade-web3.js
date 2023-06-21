@@ -1,149 +1,122 @@
-import type {
-    AccountBalance,
-    AccountId,
-    AccountInfo,
-    Executable,
-    Key,
-    LedgerId,
-    Signer,
-    SignerSignature,
-    Transaction,
-    TransactionRecord
-} from "@hashgraph/sdk";
+import {BladeExtensionInterface, SessionParams} from "./models/blade";
 
-import {SessionParams} from "./models/blade";
-
-import {WCConnector} from "./WCConnector";
 import {DAppMetadata} from "@hashgraph/hedera-wallet-connect";
-import {HandshakePayload, HandshakeResponse, IConnector} from "./models/interfaces";
-import {LegacyConnector} from "./legacyConnector";
-import {getBladeExtension, waitForConnector} from "./helpers/interfaceHelpers";
-import {ExtensionConnector} from "./extensionConnector";
+import {BladeSigner, ConnectorStrategy, IConnector} from "./models/interfaces";
+import {getBladeExtension, waitForConnector} from "./helpers/interface-helpers";
+import {WalletConnectStrategy} from "@/strategies/wallet-connect.strategy";
+import {ExtensionStrategy} from "@/strategies/extension.strategy";
+import {BaseConnectorStrategy} from "@/strategies/base-connector.strategy";
 
-export class BladeSigner implements IConnector {
-    private connector!: IConnector;
+export class BladeConnector implements IConnector {
+    private strategy!: BaseConnectorStrategy;
+    private isInitialized = async () => this.strategy.initialized;
 
-    constructor(meta?: DAppMetadata) {
-        getBladeExtension().then(extensionInterface => {
-            if (!extensionInterface) {
-                this.connector = new WCConnector(meta);
-                return;
-            }
+    constructor(preferredStrategy?: ConnectorStrategy, meta?: DAppMetadata) {
+        this.init(preferredStrategy, meta);
+    }
 
-            if (typeof extensionInterface.pairWC === "function") {
-                this.connector = new ExtensionConnector(meta);
-                return;
-            }
+    /**
+     * Returns currently active signer.
+     */
+    public getSigner(): BladeSigner | null {
+        return this.strategy.getSigner();
+    }
 
-            this.connector = new LegacyConnector();
-        }).catch(() => {
-            this.connector = new WCConnector(meta);
+    /**
+     * Returns all the signers approved for the current session.
+     */
+    public getSigners(): BladeSigner[] {
+        return this.strategy.getSigners();
+    }
+
+    /**
+     * Makes an account with given {@link accountId} active.
+     * All the subsequent operations will be performed with it.
+     *
+     * @param {string} accountId Account ID to use
+     */
+    public async selectAccount(accountId: string): Promise<BladeSigner> {
+        await waitForConnector(this.isInitialized);
+        return this.strategy.selectAccount(accountId);
+    }
+
+    /**
+     * Executes a given {@link callback} when the wallet is unlocked.
+     *
+     * @param {function} callback  Callback to execute
+     */
+    public async onWalletUnlocked(callback: () => void): Promise<void> {
+        await waitForConnector(this.isInitialized);
+        this.strategy.onWalletUnlocked(callback);
+    }
+
+    /**
+     * Executes a given {@link callback} when the wallet is locked.
+     *
+     * @param {function} callback  Callback to execute
+     */
+    public async onWalletLocked(callback: () => void): Promise<void> {
+        await waitForConnector(this.isInitialized);
+        this.strategy.onWalletLocked(callback);
+    }
+
+    /**
+     * Triggers the process of pairing with the Blade Wallet.
+     * If there is the Blade Wallet extension, wallet user will be asked to select accounts to pair.
+     * If there is no extension, QR code modal will be shown.
+     *
+     * @param {SessionParams} params Params to create a session with. Optional for testing
+     */
+    public async createSession(params?: SessionParams): Promise<string[]> {
+        await waitForConnector(this.isInitialized);
+        return this.strategy.createSession(params);
+    }
+
+    /**
+     * Closes an active session and removes all the event subscriptions.
+     */
+    public async killSession(): Promise<void> {
+        await waitForConnector(this.isInitialized);
+        return this.strategy.killSession();
+    }
+
+    /**
+     * Checks if the underlying strategy is initialized.
+     */
+    public get initialized(): boolean {
+        return !!this.strategy?.initialized;
+    }
+
+    /**
+     * Initializes the underlying strategy with {@link preferredStrategy} if passed.
+     * Tries {@link ExtensionStrategy} otherwise.
+     * If there is no extension installed, {@link WalletConnectStrategy} will be used as a fallback.
+     *
+     * @param {ConnectorStrategy?} preferredStrategy preferred strategy to use
+     * @param {DAppMetadata?} meta dApp metadata to pass to Wallet Connect
+     * @private
+     */
+    private async init(preferredStrategy?: ConnectorStrategy, meta?: DAppMetadata): Promise<void> {
+        if (preferredStrategy === ConnectorStrategy.WALLET_CONNECT) {
+            this.strategy = new WalletConnectStrategy(meta);
             return;
-        });
-    }
+        }
 
-    private isInitialized = async (): Promise<boolean> => {
-        return Boolean(this.connector?.initialized);
-    }
+        let extensionInterface: BladeExtensionInterface | undefined;
 
-    async selectAccount(accountId: string): Promise<Signer> {
-        await waitForConnector(this.isInitialized);
-        return this.connector.selectAccount(accountId);
-    }
-    getAccountKey?: (() => Key) | undefined;
+        try {
+            extensionInterface = await getBladeExtension();
+        } catch (e) {
+            this.strategy = new WalletConnectStrategy(meta);
+            return;
+        }
 
-    onAccountChanged(callback: () => void) {
-        waitForConnector(this.isInitialized).then(() => {
-            this.connector.onAccountChanged(callback);
-        });
-    }
+        if (preferredStrategy === ConnectorStrategy.EXTENSION && typeof extensionInterface?.pairWC === "function") {
+            this.strategy = new ExtensionStrategy(meta);
+        }
 
-    onWalletLocked(callback: () => void) {
-        waitForConnector(this.isInitialized).then(() => {
-            this.connector.onWalletLocked(callback);
-        });
-    }
-
-    async createSession(params?: SessionParams): Promise<string[]> {
-        await waitForConnector(this.isInitialized);
-        return this.connector.createSession(params);
-    }
-
-    async killSession(): Promise<void> {
-        await waitForConnector(this.isInitialized);
-        return this.connector.killSession();
-    }
-
-    getNetwork() {
-        return this.connector?.getNetwork() || {};
-    }
-
-    getMirrorNetwork() {
-        return this.connector?.getMirrorNetwork() || [];
-    }
-
-    async sign(
-      messages: Uint8Array[],
-      signOptions?: {canonical: boolean, likeHethers: boolean}
-    ): Promise<SignerSignature[]> {
-        await waitForConnector(this.isInitialized);
-        return this.connector.sign(messages, signOptions);
-    }
-
-    async signTransaction<T extends  Transaction>(transaction: T): Promise<T> {
-        await waitForConnector(this.isInitialized);
-        return this.connector.signTransaction(transaction);
-    }
-
-    async handshake(
-        serverSigningAccount: string,
-        serverSignature: string,
-        payload: HandshakePayload,
-        signOptions?: {canonical: boolean, likeHethers: boolean}
-    ): Promise<HandshakeResponse> {
-        await waitForConnector(this.isInitialized);
-        return this.connector.handshake(serverSigningAccount, serverSignature, payload, signOptions);
-    }
-
-    async call<RequestT, ResponseT, OutputT>(request: Executable<RequestT, ResponseT, OutputT>): Promise<OutputT> {
-        await waitForConnector(this.isInitialized);
-        return this.connector.call(request);
-    }
-
-    async checkTransaction<T extends Transaction>(transaction: T): Promise<T> {
-        await waitForConnector(this.isInitialized);
-        return this.connector.checkTransaction(transaction);
-    }
-
-    async populateTransaction<T extends Transaction>(transaction: T): Promise<T> {
-        await waitForConnector(this.isInitialized);
-        return this.connector.populateTransaction(transaction);
-    }
-
-    getLedgerId(): LedgerId | null {
-        return this.connector?.getLedgerId() || null;
-    }
-
-    getAccountId(): AccountId {
-        return this.connector?.getAccountId();
-    }
-
-    async getAccountBalance(): Promise<AccountBalance> {
-        await waitForConnector(this.isInitialized);
-        return this.connector.getAccountBalance();
-    }
-
-    async getAccountInfo(): Promise<AccountInfo> {
-        await waitForConnector(this.isInitialized);
-        return this.connector.getAccountInfo();
-    }
-
-    async getAccountRecords(): Promise<TransactionRecord[]> {
-        await waitForConnector(this.isInitialized);
-        return this.connector.getAccountRecords();
-    }
-
-    get initialized(): boolean {
-        return Boolean(this.connector);
+        if (!this.strategy) {
+            this.strategy = new WalletConnectStrategy(meta);
+        }
     }
 }
