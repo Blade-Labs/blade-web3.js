@@ -9,7 +9,12 @@ import {BaseConnectorStrategy} from "@/strategies/base-connector.strategy";
 
 export class BladeConnector implements IConnector {
     private strategy!: BaseConnectorStrategy;
-    private isInitialized = async () => this.strategy.initialized;
+    private isInitialized = async () => {
+        if (this.strategy instanceof ExtensionStrategy) {
+            return await this.strategy.wakeExtension() && this.strategy.initialized;
+        }
+        return this.strategy.initialized;
+    };
 
     constructor(preferredStrategy?: ConnectorStrategy, meta?: DAppMetadata) {
         this.init(preferredStrategy, meta);
