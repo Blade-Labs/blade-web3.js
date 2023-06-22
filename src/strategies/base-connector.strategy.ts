@@ -1,5 +1,5 @@
-import {BladeSigner, IConnector} from "@/models/interfaces";
-import {SessionParams} from "@/models/blade";
+import {SessionParams} from "../models/blade";
+import {BladeSigner, IConnector} from "../models/interfaces";
 
 export abstract class BaseConnectorStrategy implements IConnector {
   public abstract initialized: boolean;

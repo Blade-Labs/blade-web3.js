@@ -1,11 +1,11 @@
-import {BladeExtensionInterface, SessionParams} from "./models/blade";
-
 import {DAppMetadata} from "@hashgraph/hedera-wallet-connect";
+
+import {BladeExtensionInterface, SessionParams} from "./models/blade";
 import {BladeSigner, ConnectorStrategy, IConnector} from "./models/interfaces";
 import {getBladeExtension, waitForConnector} from "./helpers/interface-helpers";
-import {WalletConnectStrategy} from "@/strategies/wallet-connect.strategy";
-import {ExtensionStrategy} from "@/strategies/extension.strategy";
-import {BaseConnectorStrategy} from "@/strategies/base-connector.strategy";
+import {WalletConnectStrategy} from "./strategies/wallet-connect.strategy";
+import {ExtensionStrategy} from "./strategies/extension.strategy";
+import {BaseConnectorStrategy} from "./strategies/base-connector.strategy";
 
 export class BladeConnector implements IConnector {
     private strategy!: BaseConnectorStrategy;
@@ -19,6 +19,10 @@ export class BladeConnector implements IConnector {
      * Returns currently active signer.
      */
     public getSigner(): BladeSigner | null {
+        if (!this.initialized) {
+            return null;
+        }
+
         return this.strategy.getSigner();
     }
 
@@ -26,6 +30,10 @@ export class BladeConnector implements IConnector {
      * Returns all the signers approved for the current session.
      */
     public getSigners(): BladeSigner[] {
+        if (!this.initialized) {
+            return [];
+        }
+
         return this.strategy.getSigners();
     }
 

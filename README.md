@@ -7,21 +7,21 @@ Blade Wallet uses the Hedera Signature and Wallet Interface as defined [here](ht
 
 # Table of contents
 - [Demo](#demo)
-  - [Usage](#usage)
-    - [Installation](#installation)
-    - [Initialization](#initialization)
-    - [Pairing](#pairing)
-    - [Disconnecting](#disconnecting)
-    - [Handshake](#handshake)
-    - [Accounts](#accounts)
-      - [Select active account](#select-active-account)
-      - [Get active account ID](#get-active-account-id)
-      - [Get active account info](#get-active-account-info)
-      - [Get active account balances](#get-active-account-balances)
-    - [Transactions](#transactions)
-      - [Signing](#signing)
-      - [Getting a receipt](#getting-a-receipt)
-      - [Validation](#validation)
+- [Usage](#usage)
+  - [Installation](#installation)
+  - [Initialization](#initialization)
+  - [Pairing](#pairing)
+  - [Disconnecting](#disconnecting)
+  - [Handshake](#handshake)
+  - [Accounts](#accounts)
+    - [Select active account](#select-active-account)
+    - [Get active account ID](#get-active-account-id)
+    - [Get active account info](#get-active-account-info)
+    - [Get active account balances](#get-active-account-balances)
+  - [Transactions](#transactions)
+    - [Signing](#signing)
+    - [Getting a receipt](#getting-a-receipt)
+    - [Validation](#validation)
 - [API](#api)
 - [License](#license)
 
@@ -56,28 +56,31 @@ yarn add @hashgraph/sdk@^2.16
 Also, it is recommended to look through the Hedera [documentation](https://docs.hedera.com/hedera).
 
 ## Initialization
-The `BladeSigner` class implements the Hashgraph Signer interface and allows access to Blade Wallet operations.
+To interact with the Blade Extension programmatically, instantiate a `BladeConnector` object.
 
-To interact with the Blade Extension programmatically, instantiate a BladeSigner object.
+It is possible to pass a preferred pairing strategy. By default, the pairing is handled as follows:
+- If there is Blade Wallet extension, a wallet user will be asked to select needed accounts;
+- If there is **no** Blade Wallet extension, QR code modal will be shown.
+
+If preferred strategy is extension strategy (`ConnectorStrategy.EXTENSION`), the library will try to find the extension in the browser first. 
+If it was not found, QR code modal strategy (`ConnectorStrategy.WALLET_CONNECT`) will be used.
 
 **Implementation example:**
 ```javascript
-import {BladeConnector} from '@bladelabs/blade-web3.js';
+import {BladeConnector, ConnectorStrategy} from '@bladelabs/blade-web3.js';
 
-// dApp metadata options are optional, but are highly recommended to use
-const bladeConnector = new BladeConnector({
+const bladeConnector = new BladeConnector(
+  ConnectorStrategy.WALLET_CONNECT, // preferred strategy is optional 
+  { // dApp metadata options are optional, but are highly recommended to use
     name: "Awesome DApp",
     description: "DApp description",
     url: "https://awesome-dapp.io/",
     icons: ["some-image-url.png"]
-});
+  }
+);
 ```
 
 ### Pairing
-The pairing is handled as follows:
-- If there is Blade Wallet extension, a wallet user will be asked to select needed accounts;
-- If there is **no** Blade Wallet extension, QR code modal will be shown.
-
 By default, the first selected account becomes active, which means, that all the operations will be performed with it.
 
 **Implementation example:**
