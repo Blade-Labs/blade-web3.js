@@ -1,16 +1,17 @@
-import {BaseConnectorStrategy} from "@/strategies/base-connector.strategy";
-import {BladeSigner, WalletEvent} from "@/models/interfaces";
 import {DAppConnector, DAppMetadata} from "@hashgraph/hedera-wallet-connect";
 import {filter, Subscription} from "rxjs";
+import {LedgerId} from "@hashgraph/sdk";
+
 import {
   HederaNetwork,
   SessionParams,
   WalletLockedEvent,
   WalletUnlockedEvent,
-} from "@/models/blade";
-import {LedgerId} from "@hashgraph/sdk";
-import {getAccountIDsFromSigners} from "@/helpers/utils";
-import {noSessionError} from "@/models/errors";
+} from "../models/blade";
+import {noSessionError} from "../models/errors";
+import {BladeSigner, WalletEvent} from "../models/interfaces";
+import {getAccountIDsFromSigners} from "../helpers/utils";
+import {BaseConnectorStrategy} from "../strategies/base-connector.strategy";
 
 export class WalletConnectStrategy extends BaseConnectorStrategy {
   protected activeSigner: BladeSigner | null = null;

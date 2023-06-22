@@ -1,9 +1,9 @@
-import {WalletConnectStrategy} from "@/strategies/wallet-connect.strategy";
-import {HederaNetwork, SessionParams} from "@/models/blade";
-import {getBladeExtension} from "@/helpers/interface-helpers";
 import {LedgerId} from "@hashgraph/sdk";
-import {getAccountIDsFromSigners} from "@/helpers/utils";
 import {SessionTypes} from "@walletconnect/types";
+import {HederaNetwork, SessionParams} from "../models/blade";
+import {getBladeExtension} from "../helpers/interface-helpers";
+import {getAccountIDsFromSigners} from "../helpers/utils";
+import {WalletConnectStrategy} from "../strategies/wallet-connect.strategy";
 
 export class ExtensionStrategy extends WalletConnectStrategy {
 
