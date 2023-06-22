@@ -29,4 +29,5 @@ export type KeyPairSignOptions = {
  */
 export type BladeExtensionInterface = {
   pairWC?(url: string): Promise<PairingTypes.Struct>;
+  wake?(): Promise<boolean>;
 };
