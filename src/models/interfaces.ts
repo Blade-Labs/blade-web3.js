@@ -149,6 +149,7 @@ export interface HandshakeResponse {
 }
 
 export enum ConnectorStrategy {
+    AUTO,
     EXTENSION,
     WALLET_CONNECT
 }

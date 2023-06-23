@@ -16,7 +16,7 @@ export class BladeConnector implements IConnector {
         return this.strategy?.initialized;
     };
 
-    constructor(preferredStrategy?: ConnectorStrategy, meta?: DAppMetadata) {
+    constructor(preferredStrategy = ConnectorStrategy.AUTO, meta?: DAppMetadata) {
         this.init(preferredStrategy, meta);
     }
 
@@ -101,15 +101,13 @@ export class BladeConnector implements IConnector {
     }
 
     /**
-     * Initializes the underlying strategy with {@link preferredStrategy} if passed.
-     * Tries {@link ExtensionStrategy} otherwise.
-     * If there is no extension installed, {@link WalletConnectStrategy} will be used as a fallback.
+     * Initializes the underlying strategy with a given {@link preferredStrategy}.
      *
-     * @param {ConnectorStrategy?} preferredStrategy preferred strategy to use
+     * @param {ConnectorStrategy} preferredStrategy preferred strategy to use
      * @param {DAppMetadata?} meta dApp metadata to pass to Wallet Connect
      * @private
      */
-    private async init(preferredStrategy?: ConnectorStrategy, meta?: DAppMetadata): Promise<void> {
+    private async init(preferredStrategy: ConnectorStrategy, meta?: DAppMetadata): Promise<void> {
         if (preferredStrategy === ConnectorStrategy.WALLET_CONNECT) {
             this.strategy = new WalletConnectStrategy(meta);
             return;
@@ -124,11 +122,11 @@ export class BladeConnector implements IConnector {
             return;
         }
 
-        if (preferredStrategy === ConnectorStrategy.EXTENSION && typeof extensionInterface?.pairWC === "function") {
+        if (typeof extensionInterface?.pairWC === "function") { // if AUTO or EXTENSION strategy
             this.strategy = new ExtensionStrategy(meta);
         }
 
-        if (!this.strategy) {
+        if (!this.strategy) { // fallback
             this.strategy = new WalletConnectStrategy(meta);
         }
     }
