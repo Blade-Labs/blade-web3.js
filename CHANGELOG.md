@@ -1,3 +1,6 @@
+# v1.0.4
+- `ConnectorStrategy.EXTENSION` will now throw an error, if the extension was not detected
+
 # v1.0.0
 - Reworked overall documentation
 - General code and library design improvements
