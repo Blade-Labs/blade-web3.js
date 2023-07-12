@@ -58,12 +58,13 @@ Also, it is recommended to look through the Hedera [documentation](https://docs.
 ## Initialization
 To interact with the Blade Extension programmatically, instantiate a `BladeConnector` object.
 
-It is possible to pass a preferred pairing strategy. By default, the pairing is handled as follows:
+It is possible to pass a preferred pairing strategy. By default (`ConnectorStrategy.AUTO`), the pairing is handled as follows:
 - If there is Blade Wallet extension, a wallet user will be asked to select needed accounts;
-- If there is **no** Blade Wallet extension, QR code modal will be shown.
+- If there is **no** Blade Wallet extension, a QR code modal will be shown.
 
-If preferred strategy is extension strategy (`ConnectorStrategy.EXTENSION`), the library will try to find the extension in the browser first. 
-If it was not found, QR code modal strategy (`ConnectorStrategy.WALLET_CONNECT`) will be used.
+If preferred strategy is extension strategy (`ConnectorStrategy.EXTENSION`), the library will throw the error, if the extension was not detected.
+
+If preferred strategy is WalletConnect strategy (`ConnectorStrategy.WALLET_CONNECT`), only the QR code modal will be used.
 
 **Implementation example:**
 ```javascript

@@ -118,8 +118,9 @@ export class BladeConnector implements IConnector {
         try {
             extensionInterface = await getBladeExtension();
         } catch (e) {
-            this.strategy = new WalletConnectStrategy(meta);
-            return;
+            if (preferredStrategy === ConnectorStrategy.EXTENSION) {
+                throw e;
+            }
         }
 
         if (typeof extensionInterface?.pairWC === "function") { // if AUTO or EXTENSION strategy
