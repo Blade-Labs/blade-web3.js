@@ -21,7 +21,7 @@ export type SessionParams = {
 
 export type KeyPairSignOptions = {
   canonical?: boolean,
-  withHethers?: boolean
+  likeHethers?: boolean
 }
 
 /**
