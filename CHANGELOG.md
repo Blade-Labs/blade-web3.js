@@ -1,3 +1,6 @@
+# v.1.1.0
+- `BladeConnector` constructor is now private. `BladeConnector.init` async method should be used instead.
+
 # v1.0.4
 - `ConnectorStrategy.EXTENSION` will now throw an error, if the extension was not detected
 

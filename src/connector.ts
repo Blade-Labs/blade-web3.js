@@ -8,7 +8,6 @@ import {ExtensionStrategy} from "./strategies/extension.strategy";
 import {BaseConnectorStrategy} from "./strategies/base-connector.strategy";
 
 export class BladeConnector implements IConnector {
-    private strategy!: BaseConnectorStrategy;
     private isInitialized = async () => {
         if (this.strategy instanceof ExtensionStrategy) {
             return await this.strategy.wakeExtension() && this.strategy.initialized;
@@ -16,8 +15,35 @@ export class BladeConnector implements IConnector {
         return this.strategy?.initialized;
     };
 
-    constructor(preferredStrategy = ConnectorStrategy.AUTO, meta?: DAppMetadata) {
-        this.init(preferredStrategy, meta);
+    private constructor(private readonly strategy: BaseConnectorStrategy) {}
+
+    /**
+     * Initializes connector with the underlying strategy with a given {@link preferredStrategy}.
+     *
+     * @param {ConnectorStrategy} preferredStrategy preferred strategy to use
+     * @param {DAppMetadata?} meta dApp metadata to pass to Wallet Connect
+     * @private
+     */
+    public static async init(preferredStrategy: ConnectorStrategy, meta?: DAppMetadata): Promise<BladeConnector> {
+        if (preferredStrategy === ConnectorStrategy.WALLET_CONNECT) {
+            return new BladeConnector(new WalletConnectStrategy(meta));
+        }
+
+        let extensionInterface: BladeExtensionInterface | undefined;
+
+        try {
+            extensionInterface = await getBladeExtension();
+        } catch (e) {
+            if (preferredStrategy === ConnectorStrategy.EXTENSION) {
+                throw e;
+            }
+        }
+
+        if (typeof extensionInterface?.pairWC === "function") { // if AUTO or EXTENSION strategy
+            return new BladeConnector(new ExtensionStrategy(meta));
+        }
+
+        return new BladeConnector(new WalletConnectStrategy(meta));
     }
 
     /**
@@ -98,37 +124,5 @@ export class BladeConnector implements IConnector {
      */
     public get initialized(): boolean {
         return !!this.strategy?.initialized;
-    }
-
-    /**
-     * Initializes the underlying strategy with a given {@link preferredStrategy}.
-     *
-     * @param {ConnectorStrategy} preferredStrategy preferred strategy to use
-     * @param {DAppMetadata?} meta dApp metadata to pass to Wallet Connect
-     * @private
-     */
-    private async init(preferredStrategy: ConnectorStrategy, meta?: DAppMetadata): Promise<void> {
-        if (preferredStrategy === ConnectorStrategy.WALLET_CONNECT) {
-            this.strategy = new WalletConnectStrategy(meta);
-            return;
-        }
-
-        let extensionInterface: BladeExtensionInterface | undefined;
-
-        try {
-            extensionInterface = await getBladeExtension();
-        } catch (e) {
-            if (preferredStrategy === ConnectorStrategy.EXTENSION) {
-                throw e;
-            }
-        }
-
-        if (typeof extensionInterface?.pairWC === "function") { // if AUTO or EXTENSION strategy
-            this.strategy = new ExtensionStrategy(meta);
-        }
-
-        if (!this.strategy) { // fallback
-            this.strategy = new WalletConnectStrategy(meta);
-        }
     }
 }
