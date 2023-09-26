@@ -70,7 +70,7 @@ If preferred strategy is WalletConnect strategy (`ConnectorStrategy.WALLET_CONNE
 ```javascript
 import {BladeConnector, ConnectorStrategy} from '@bladelabs/blade-web3.js';
 
-const bladeConnector = new BladeConnector(
+const bladeConnector = await BladeConnector.init(
   ConnectorStrategy.WALLET_CONNECT, // preferred strategy is optional 
   { // dApp metadata options are optional, but are highly recommended to use
     name: "Awesome DApp",
