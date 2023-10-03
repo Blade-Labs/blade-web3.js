@@ -8,9 +8,10 @@ import {ExtensionStrategy} from "./strategies/extension.strategy";
 import {BaseConnectorStrategy} from "./strategies/base-connector.strategy";
 
 export class BladeConnector implements IConnector {
-    private isInitialized = async () => {
+    private isInitialized = async (skipWake?: boolean) => {
         if (this.strategy instanceof ExtensionStrategy) {
-            return await this.strategy.wakeExtension() && this.strategy.initialized;
+            const awaken = skipWake ? true : await this.strategy.wakeExtension();
+            return awaken && this.strategy.initialized;
         }
         return this.strategy?.initialized;
     };
@@ -115,7 +116,7 @@ export class BladeConnector implements IConnector {
      * Closes an active session and removes all the event subscriptions.
      */
     public async killSession(): Promise<void> {
-        await waitForConnector(this.isInitialized);
+        await waitForConnector(this.isInitialized.bind(this, true));
         return this.strategy.killSession();
     }
 
