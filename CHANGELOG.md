@@ -1,3 +1,6 @@
+# v.1.2.0
+- Fix that allows to use `handshake` method with mobile devices.
+
 # v.1.1.0
 - `BladeConnector` constructor is now private. `BladeConnector.init` async method should be used instead.
 

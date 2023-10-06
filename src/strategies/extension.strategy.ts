@@ -40,11 +40,4 @@ export class ExtensionStrategy extends WalletConnectStrategy {
 
     return [];
   }
-
-  private async onSessionChange(session: SessionTypes.Struct): Promise<void> {
-    await this.dAppConnector.onSessionConnected(session);
-    this.signers = this.dAppConnector.getSigners();
-    this.activeSigner = this.signers[0] || null;
-    await this.selectAccount();
-  }
 }

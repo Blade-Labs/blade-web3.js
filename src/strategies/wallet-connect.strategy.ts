@@ -1,6 +1,7 @@
 import {DAppConnector, DAppMetadata} from "@hashgraph/hedera-wallet-connect";
 import {filter, Subscription} from "rxjs";
 import {LedgerId} from "@hashgraph/sdk";
+import {WalletConnectModal} from "@walletconnect/modal";
 
 import {
   HederaNetwork,
@@ -12,6 +13,8 @@ import {noSessionError} from "../models/errors";
 import {BladeSigner, WalletEvent} from "../models/interfaces";
 import {getAccountIDsFromSigners} from "../helpers/utils";
 import {BaseConnectorStrategy} from "../strategies/base-connector.strategy";
+import {pairingRejected} from "../models/errors";
+import {SessionTypes} from "@walletconnect/types";
 
 export class WalletConnectStrategy extends BaseConnectorStrategy {
   protected activeSigner: BladeSigner | null = null;
@@ -19,9 +22,17 @@ export class WalletConnectStrategy extends BaseConnectorStrategy {
   protected dAppConnector: DAppConnector;
 
   private subscriptions: Subscription[] = [];
+  private modal: WalletConnectModal;
+  private modalStateCallback?: (state: {open: boolean}) => void;
 
-  constructor(meta?: DAppMetadata) {
+  constructor(meta?: DAppMetadata, projectId?: string) {
     super();
+    this.modal = new WalletConnectModal({
+      projectId: projectId ?? "0301c380a9a2a23af77ce32611c158e0"
+    });
+    this.modal.subscribeModal((state) => {
+      this.modalStateCallback?.(state);
+    });
     this.dAppConnector = new DAppConnector(meta);
     this.dAppConnector.init([WalletUnlockedEvent, WalletLockedEvent], ["handshake"]);
   }
@@ -43,13 +54,39 @@ export class WalletConnectStrategy extends BaseConnectorStrategy {
   public async createSession(params?: SessionParams): Promise<string[]> {
     try {
       const networkName = (params?.network || HederaNetwork.Mainnet).toLowerCase();
-      await this.dAppConnector.connect(LedgerId.fromString(networkName));
-      this.signers = this.dAppConnector.getSigners();
-      this.activeSigner = this.signers[0] || null;
+      const data = await this.dAppConnector.prepareConnectURI(LedgerId.fromString(networkName));
+      let closePromise;
+      if (data) {
+        if (data.uri) {
+          await this.modal.openModal({uri: data.uri});
+          closePromise =  new Promise((reject) => {
+            this.modalStateCallback = ({open}) => {
+              if (!open) {
+                reject(pairingRejected());
+              }
+            };
+          });
+        }
 
-      return getAccountIDsFromSigners(this.signers);
+        // @ts-ignore
+        const session: SessionTypes.Struct = await Promise.race([data.approval(), closePromise])
+        this.modalStateCallback = undefined;
+        await this.onSessionChange(session);
+        return getAccountIDsFromSigners(this.signers);
+      } else {
+        const existingSession = await this.dAppConnector.checkPersistedState();
+        if (existingSession) {
+          await this.onSessionChange(existingSession);
+          return getAccountIDsFromSigners(this.signers);
+        }
+
+        return [];
+      }
     } catch (e) {
       throw e;
+    } finally {
+      this.modalStateCallback = undefined;
+      this.modal.closeModal();
     }
   }
 

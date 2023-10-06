@@ -12,6 +12,10 @@ export enum BladeWalletError {
    * Signer could not be used because there is no active session with the Blade Wallet Extension.
    */
   NoSession = 'NoActiveSession',
+  /**
+   * User rejected the pairing request.
+   */
+  PairingRejected = 'PairingRejected',
 }
 
 export function noExtensionError(): Error {
@@ -23,5 +27,11 @@ export function noExtensionError(): Error {
 export function noSessionError(): Error {
   const err = new Error(`User does not have an active Blade session.`);
   err.name = BladeWalletError.NoSession;
+  return err;
+}
+
+export function pairingRejected(): Error {
+  const err = new Error(`User rejected pairing request.`);
+  err.name = BladeWalletError.PairingRejected;
   return err;
 }
