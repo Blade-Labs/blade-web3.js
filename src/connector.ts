@@ -22,11 +22,12 @@ export class BladeConnector implements IConnector {
      *
      * @param {ConnectorStrategy} preferredStrategy preferred strategy to use
      * @param {DAppMetadata?} meta dApp metadata to pass to Wallet Connect
+     * @param {string?} projectId dApp WC project ID, default one is a Blade Wallet project ID
      * @private
      */
-    public static async init(preferredStrategy: ConnectorStrategy, meta?: DAppMetadata): Promise<BladeConnector> {
+    public static async init(preferredStrategy: ConnectorStrategy, meta?: DAppMetadata, projectId?: string): Promise<BladeConnector> {
         if (preferredStrategy === ConnectorStrategy.WALLET_CONNECT) {
-            return new BladeConnector(new WalletConnectStrategy(meta));
+            return new BladeConnector(new WalletConnectStrategy(meta, projectId));
         }
 
         let extensionInterface: BladeExtensionInterface | undefined;
@@ -40,10 +41,10 @@ export class BladeConnector implements IConnector {
         }
 
         if (typeof extensionInterface?.pairWC === "function") { // if AUTO or EXTENSION strategy
-            return new BladeConnector(new ExtensionStrategy(meta));
+            return new BladeConnector(new ExtensionStrategy(meta, projectId));
         }
 
-        return new BladeConnector(new WalletConnectStrategy(meta));
+        return new BladeConnector(new WalletConnectStrategy(meta, projectId));
     }
 
     /**

@@ -17,6 +17,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@hashgraph/hedera-wallet-connect": "^0.1.0",
+    "@walletconnect/modal": "^2.6.2",
     "rxjs": "^7.8.0"
   },
   "devDependencies": {
