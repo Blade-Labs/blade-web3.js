@@ -361,14 +361,16 @@ try {
 [Read the TypeDoc API documentation](https://blade-labs.github.io/blade-web3.js/)
 
 ## BladeConnector
-| Method                                                 | Description                                 |
-|:-------------------------------------------------------|:--------------------------------------------|
-| `bladeConnector.createSession(params?: SessionParams)` | Create session with Blade Wallet.           |
-| `bladeConnector.killSession()`                         | Close the session with Blade Wallet.        |
-| `bladeConnector.getSigner()`                           | Get the currently active BladeSigner.       |
-| `bladeConnector.getSigners()`                          | Get a list of paired BladeSigner objects.   |
-| `bladeConnector.onWalletLocked(callback)`              | Execute a callback when wallet is locked.   |
-| `bladeConnector.onWalletUnlocked(callback)`            | Execute a callback when wallet is unlocked. |                                           |
+| Method                                                 | Description                                              |
+|:-------------------------------------------------------|:---------------------------------------------------------|
+| `bladeConnector.createSession(params?: SessionParams)` | Create session with Blade Wallet.                        |
+| `bladeConnector.killSession()`                         | Close the session with Blade Wallet.                     |
+| `bladeConnector.getSigner()`                           | Get the currently active BladeSigner.                    |
+| `bladeConnector.getSigners()`                          | Get a list of paired BladeSigner objects.                |
+| `bladeConnector.onWalletLocked(callback)`              | Execute a callback when wallet is locked.                |
+| `bladeConnector.onWalletUnlocked(callback)`            | Execute a callback when wallet is unlocked.              |                                           |
+| `bladeConnector.onSessionDisconnect(callback)`         | Execute a callback when a session has been disconnected. |                                           |
+| `bladeConnector.onSessionExpire(callback)`             | Execute a callback when a session has expired.           |                                           |
 
 ## BladeSigner
 | Method                                                                                               | Description                                                      |
