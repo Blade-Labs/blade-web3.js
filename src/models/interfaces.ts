@@ -17,6 +17,8 @@ export interface IConnector {
     getSigners(): BladeSigner[];
     onWalletLocked(callback: () => void): void;
     onWalletUnlocked(callback: () => void): void;
+    onSessionDisconnect(callback: () => void): void;
+    onSessionExpire(callback: () => void): void;
     createSession(params?: SessionParams): Promise<string[]>;
     killSession(): Promise<void>;
     selectAccount(accountId?: string): Promise<Signer>;

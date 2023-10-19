@@ -25,6 +25,14 @@ export abstract class BaseConnectorStrategy implements IConnector {
     await this.selectAccount();
   }
 
+  public onSessionDisconnect(callback: () => void): void {
+    (this.dAppConnector as any).client.on("session_delete", callback);
+  }
+
+  public onSessionExpire(callback: () => void): void {
+    (this.dAppConnector as any).client.on("session_expire", callback);
+  }
+
   public abstract createSession(params?: SessionParams): Promise<string[]>;
   public abstract killSession(): Promise<void>;
   public abstract onWalletUnlocked(callback: () => void): void;
