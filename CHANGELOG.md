@@ -1,3 +1,6 @@
+# v.1.2.1
+- Add ability to subscribe to session disconnect or session expiration
+
 # v.1.2.0
 - Fix that allows to use `handshake` method with mobile devices.
 
