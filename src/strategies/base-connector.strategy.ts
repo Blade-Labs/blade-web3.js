@@ -18,7 +18,7 @@ export abstract class BaseConnectorStrategy implements IConnector {
     return this.signers;
   }
 
-  public async onSessionChange(session: SessionTypes.Struct): Promise<void> {
+  protected async onSessionChange(session: SessionTypes.Struct): Promise<void> {
     await this.dAppConnector.onSessionConnected(session);
     this.signers = this.dAppConnector.getSigners();
     this.activeSigner = this.signers[0] || null;
