@@ -102,6 +102,24 @@ export class BladeConnector implements IConnector {
     }
 
     /**
+     * Executes a given {@link callback} when the session has been disconnected.
+     *
+     * @param {function} callback  Callback to execute
+     */
+    public onSessionDisconnect(callback: () => void): void {
+        this.strategy.onSessionDisconnect(callback);
+    }
+
+    /**
+     * Executes a given {@link callback} when the session has expired.
+     *
+     * @param {function} callback  Callback to execute
+     */
+    public onSessionExpire(callback: () => void): void {
+        this.strategy.onSessionExpire(callback);
+    }
+
+    /**
      * Triggers the process of pairing with the Blade Wallet.
      * If there is the Blade Wallet extension, wallet user will be asked to select accounts to pair.
      * If there is no extension, QR code modal will be shown.
