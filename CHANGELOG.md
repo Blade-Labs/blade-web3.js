@@ -1,3 +1,6 @@
+# v.1.2.2
+- Fix an issue, when session requests could be sent earlier, than the wallet received the session approval 
+
 # v.1.2.1
 - Add ability to subscribe to session disconnect or session expiration
 

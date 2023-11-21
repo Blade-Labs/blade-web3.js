@@ -23,6 +23,10 @@ export abstract class BaseConnectorStrategy implements IConnector {
     this.signers = this.dAppConnector.getSigners();
     this.activeSigner = this.signers[0] || null;
     await this.selectAccount();
+
+    await (this.dAppConnector as any).client.ping({
+      topic: (this.dAppConnector as any).session.topic
+    });
   }
 
   public onSessionDisconnect(callback: () => void): void {
