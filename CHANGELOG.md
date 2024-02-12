@@ -1,13 +1,19 @@
-# v.1.2.2
+# v1.4.0
+- Native WalletConnect implementation is used instead of relying on Hedera WalletConnect
+
+### Breaking changes:
+- `getSigner()` was removed in favor of using `getSigners()`. There is no concept of an active signer anymore, and all signers are active simultaneously 
+
+# v1.2.2
 - Fix an issue, when session requests could be sent earlier, than the wallet received the session approval 
 
-# v.1.2.1
+# v1.2.1
 - Add ability to subscribe to session disconnect or session expiration
 
-# v.1.2.0
+# v1.2.0
 - Fix that allows to use `handshake` method with mobile devices.
 
-# v.1.1.0
+# v1.1.0
 - `BladeConnector` constructor is now private. `BladeConnector.init` async method should be used instead.
 
 # v1.0.4
