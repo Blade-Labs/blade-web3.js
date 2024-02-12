@@ -1,4 +1,3 @@
-import {Executable, Signer, Transaction} from "@hashgraph/sdk";
 import {
     AccountBalance,
     AccountId,
@@ -6,14 +5,16 @@ import {
     Key,
     LedgerId,
     SignerSignature,
-    TransactionRecord
-} from "@hashgraph/sdk/lib/Signer";
+    TransactionRecord,
+    Executable,
+    Signer,
+    Transaction
+} from "@hashgraph/sdk";
 
 import {KeyPairSignOptions, SessionParams} from "../models/blade";
 
 export interface IConnector {
     initialized: boolean;
-    getSigner(): BladeSigner | null;
     getSigners(): BladeSigner[];
     onWalletLocked(callback: () => void): void;
     onWalletUnlocked(callback: () => void): void;
@@ -21,7 +22,6 @@ export interface IConnector {
     onSessionExpire(callback: () => void): void;
     createSession(params?: SessionParams): Promise<string[]>;
     killSession(): Promise<void>;
-    selectAccount(accountId?: string): Promise<Signer>;
 }
 
 export interface BladeSigner extends Signer {

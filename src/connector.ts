@@ -1,4 +1,4 @@
-import {DAppMetadata} from "@hashgraph/hedera-wallet-connect";
+import {CoreTypes} from "@walletconnect/types";
 
 import {BladeExtensionInterface, SessionParams} from "./models/blade";
 import {BladeSigner, ConnectorStrategy, IConnector} from "./models/interfaces";
@@ -22,11 +22,15 @@ export class BladeConnector implements IConnector {
      * Initializes connector with the underlying strategy with a given {@link preferredStrategy}.
      *
      * @param {ConnectorStrategy} preferredStrategy preferred strategy to use
-     * @param {DAppMetadata?} meta dApp metadata to pass to Wallet Connect
+     * @param {CoreTypes.Metadata?} meta dApp metadata to pass to Wallet Connect
      * @param {string?} projectId dApp WC project ID, default one is a Blade Wallet project ID
      * @private
      */
-    public static async init(preferredStrategy: ConnectorStrategy, meta?: DAppMetadata, projectId?: string): Promise<BladeConnector> {
+    public static async init(
+      preferredStrategy: ConnectorStrategy,
+      meta?: CoreTypes.Metadata,
+      projectId?: string
+    ): Promise<BladeConnector> {
         if (preferredStrategy === ConnectorStrategy.WALLET_CONNECT) {
             return new BladeConnector(new WalletConnectStrategy(meta, projectId));
         }
@@ -49,17 +53,6 @@ export class BladeConnector implements IConnector {
     }
 
     /**
-     * Returns currently active signer.
-     */
-    public getSigner(): BladeSigner | null {
-        if (!this.initialized) {
-            return null;
-        }
-
-        return this.strategy.getSigner();
-    }
-
-    /**
      * Returns all the signers approved for the current session.
      */
     public getSigners(): BladeSigner[] {
@@ -68,17 +61,6 @@ export class BladeConnector implements IConnector {
         }
 
         return this.strategy.getSigners();
-    }
-
-    /**
-     * Makes an account with given {@link accountId} active.
-     * All the subsequent operations will be performed with it.
-     *
-     * @param {string} accountId Account ID to use
-     */
-    public async selectAccount(accountId: string): Promise<BladeSigner> {
-        await waitForConnector(this.isInitialized);
-        return this.strategy.selectAccount(accountId);
     }
 
     /**
