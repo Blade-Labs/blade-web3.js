@@ -14,10 +14,9 @@ Blade Wallet uses the Hedera Signature and Wallet Interface as defined [here](ht
   - [Disconnecting](#disconnecting)
   - [Handshake](#handshake)
   - [Accounts](#accounts)
-    - [Select active account](#select-active-account)
-    - [Get active account ID](#get-active-account-id)
-    - [Get active account info](#get-active-account-info)
-    - [Get active account balances](#get-active-account-balances)
+    - [Get account ID](#get-account-id)
+    - [Get account info](#get-account-info)
+    - [Get account balances](#get-account-balances)
   - [Transactions](#transactions)
     - [Signing](#signing)
     - [Getting a receipt](#getting-a-receipt)
@@ -82,8 +81,6 @@ const bladeConnector = await BladeConnector.init(
 ```
 
 ### Pairing
-By default, the first selected account becomes active, which means, that all the operations will be performed with it.
-
 **Implementation example:**
 ```javascript
 import {HederaNetwork} from '@bladelabs/blade-web3.js';
@@ -95,8 +92,8 @@ const params = {
 }
 
 const pairedAccountIds = await bladeConnector.createSession(params);
-// retrieving the currently active signer to perform all the Hedera operations
-const bladeSigner = await bladeConnector.getSigner();
+// retrieving the first available signer to perform all the Hedera operations
+const bladeSigner = await bladeConnector.getSigners()[0];
 ```
 
 ### Disconnecting
@@ -206,42 +203,30 @@ const verifyData = (data, publicKey, signature) => {
 ```
 
 ### Accounts
-#### Select active account
-To select another account, use `.selectAccount()` method.
+#### Get account ID
+To get an account ID, use `.getAccountId()` method on the needed signer.
 
 **Implementation example:**
 ```javascript
-// let's say, user selected the following accounts for the session: ["0.0.12351", "0.0.446527"]
-// thus "0.0.12351" is automatically selected
-bladeConnector.selectAccount("0.0.446527");
-// now all the operations will be performed with the newly selected account
-```
-
-
-#### Get active account ID
-To get an active account ID, use `.getAccountId()` method.
-
-**Implementation example:**
-```javascript
-const bladeSigner = bladeConnector.getSigner();
+const bladeSigner = bladeConnector.getSigners()[0];
 const accountId = bladeSigner.getAccountId();
 ```
 
-#### Get active account info
-To get detailed info about currently active account, use `.getAccountInfo()` method.
+#### Get account info
+To get detailed info about account, use `.getAccountInfo()` method on the needed signer.
 
 **Implementation example:**
 ```javascript
-const bladeSigner = bladeConnector.getSigner();
+const bladeSigner = bladeConnector.getSigners()[0];
 const accountInfo = bladeSigner.getAccountInfo();
 ```
 
-#### Get active account balances
-To get info about all the balances of the active account, use `.getAccountBalance()` method.
+#### Get account balances
+To get info about all the balances of an account, use `.getAccountBalance()` method on the needed signer.
 
 **Implementation example:**
 ```javascript
-const bladeSigner = bladeConnector.getSigner();
+const bladeSigner = bladeConnector.getSigners()[0];
 const balances = bladeSigner.getAccountBalance();
 ```
 
@@ -256,7 +241,7 @@ but it is also possible to call the `.executeWithSigner()` on a transaction itse
 ```javascript
 import {TransferTransaction} from '@hashgraph/sdk';
 
-const bladeSigner = bladeConnector.getSigner();
+const bladeSigner = bladeConnector.getSigners()[0];
 
 const amount = 5;
 
@@ -278,7 +263,7 @@ const result = await signedTransaction.executeWithSigner(bladeSigner);
 ```javascript
 import {TransferTransaction, AccountId} from '@hashgraph/sdk';
 
-const bladeSigner = bladeConnector.getSigner();
+const bladeSigner = bladeConnector.getSigners()[0];
 
 const amount = 5;
 
@@ -300,7 +285,7 @@ const result = await signedTransaction.executeWithSigner(bladeSigner);
 ```javascript
 import {TransferTransaction} from '@hashgraph/sdk';
 
-const bladeSigner = bladeConnector.getSigner();
+const bladeSigner = bladeConnector.getSigners()[0];
 
 const amount = 5;
 
@@ -325,7 +310,7 @@ import {TransactionReceiptQuery} from '@hashgraph/sdk';
 
 const transactionId = "some-tx-id";
 
-const bladeSigner = bladeConnector.getSigner();
+const bladeSigner = bladeConnector.getSigners()[0];
 const result = await bladeSigner.call(new TransactionReceiptQuery({
   transactionId
 }));
@@ -333,13 +318,13 @@ const result = await bladeSigner.call(new TransactionReceiptQuery({
 
 #### Validation
 If there is a need to check transaction validity, `.checkTransaction()` method may be useful for that.
-It checks if node accounts are valid for the current network, and if transaction composed with the currently selected account.
+It checks if node accounts are valid for the current network, and if transaction composed with the account signer, which this method is called on.
 
 **Implementation example:**
 ```javascript
 import {TransferTransaction} from '@hashgraph/sdk';
 
-let bladeSigner = bladeConnector.getSigner();
+let bladeSigner = bladeConnector.getSigners()[0];
 
 const amount = 5;
 
@@ -348,7 +333,7 @@ const transaction = await new TransferTransaction()
   .addHbarTransfer(bladeSigner.getAccountId(), -amount)
   .freezeWithSigner(bladeSigner);
 
-bladeSigner = bladeConnector.selectAccount("0.0.1234567"); // selecting different account
+bladeSigner = bladeConnector.getSigners()[1]; // using different account
 
 try {
   await bladeSigner.checkTransaction(transaction); 
@@ -365,7 +350,6 @@ try {
 |:-------------------------------------------------------|:---------------------------------------------------------|
 | `bladeConnector.createSession(params?: SessionParams)` | Create session with Blade Wallet.                        |
 | `bladeConnector.killSession()`                         | Close the session with Blade Wallet.                     |
-| `bladeConnector.getSigner()`                           | Get the currently active BladeSigner.                    |
 | `bladeConnector.getSigners()`                          | Get a list of paired BladeSigner objects.                |
 | `bladeConnector.onWalletLocked(callback)`              | Execute a callback when wallet is locked.                |
 | `bladeConnector.onWalletUnlocked(callback)`            | Execute a callback when wallet is unlocked.              |                                           |
@@ -375,17 +359,17 @@ try {
 ## BladeSigner
 | Method                                                                                               | Description                                                      |
 |:-----------------------------------------------------------------------------------------------------|:-----------------------------------------------------------------|
-| `bladeSigner.getAccountId()`                                                                         | Get accountId of active account.                                 |
+| `bladeSigner.getAccountId()`                                                                         | Get accountId of the related account.                            |
 | `bladeSigner.getAccountBalance(accountId: AccountId⎮string)`                                         | Retrieve account balance by accountId                            |
 | `bladeSigner.getAccountInfo(accountId: AccountId⎮string)`                                            | Get information about a Hedera account on the connected network. |
 | `bladeSigner.checkTransaction(transaction: Transaction)`                                             | Check that a transaction is valid.                               |
-| `bladeSigner.populateTransaction(transaction: Transaction)`                                          | Set transaction id and node accounts using active account.       |
+| `bladeSigner.populateTransaction(transaction: Transaction)`                                          | Set transaction id and node accounts using the related account.  |
 | `bladeSigner.call(request: Executable)`                                                              | Execute a transaction with provider account.                     |
-| `bladeSigner.sign(message: UInt8Array[])`                                                            | Sign a transaction with active wallet account.                   |
-| `bladeSigner.signTransaction(transaction: Transaction)`                                              | Sign a transaction with active wallet account.                   |
+| `bladeSigner.sign(message: UInt8Array[])`                                                            | Sign a transaction or a message with the related wallet account. |
+| `bladeSigner.signTransaction(transaction: Transaction)`                                              | Sign a transaction with the related wallet account.              |
 | `bladeSigner.getLedgerId()`                                                                          | Ledger Id of the currently connected network.                    |
 | `bladeSigner.getMirrorNetwork()`                                                                     | Get an array of mirror nodes for the current network.            |
-| `bladeSigner.getNetwork()`                                                                           | Get a map of nodes for the current hedera network.               |
+| `bladeSigner.getNetwork()`                                                                           | Get a map of nodes for the current Hedera network.               |
 | `bladeSigner.handshake(serverAccountId: string, serverSignature: string, payload: HandshakePayload)` | Make secure client-server handshake                              |
 
 # License
