@@ -1,4 +1,4 @@
-# v1.4.0
+# v1.3.0
 - Native WalletConnect implementation is used instead of relying on Hedera WalletConnect
 
 ### Breaking changes:
