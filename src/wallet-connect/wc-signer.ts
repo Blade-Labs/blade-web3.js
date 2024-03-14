@@ -172,7 +172,9 @@ export class WCSigner implements BladeSigner {
           : new AccountId(nodeAccountId)
     );
 
-    transaction.setNodeAccountIds(network);
+    transaction.setNodeAccountIds(
+      network.slice(0, (network.length + 3 - 1) / 3) // take around one third of all available nodes
+    );
 
     return transaction;
   }
