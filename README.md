@@ -1,5 +1,5 @@
 ## [DEPRECATED]
-This package is no longer supported. Please, use the native [WalletConnect](https://docs.walletconnect.com/appkit/javascript/core/installation).
+This package is no longer supported. Please, use the native [WalletConnect](https://docs.walletconnect.com/appkit/javascript/core/installation) or [HederaWalletConnect](https://github.com/hashgraph/hedera-wallet-connect).
 
 # Blade Web3 JavaScript API
 
