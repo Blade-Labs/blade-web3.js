@@ -1,3 +1,6 @@
+# v1.3.1
+- Fix conflicting @hashgraph/sdk typings
+
 # v1.3.0
 - Native WalletConnect implementation is used instead of relying on Hedera WalletConnect
 
