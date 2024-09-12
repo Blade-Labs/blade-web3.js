@@ -1,3 +1,6 @@
+## [DEPRECATED]
+This package is no longer supported. Please, use the native [WalletConnect](https://docs.walletconnect.com/appkit/javascript/core/installation).
+
 # Blade Web3 JavaScript API
 
 [![npm version](https://badge.fury.io/js/@bladelabs%2Fblade-web3.js.svg)](https://badge.fury.io/js/@bladelabs%2Fblade-web3.js)
